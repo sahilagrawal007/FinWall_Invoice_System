@@ -1,0 +1,426 @@
+<!-- Payments Received Page - Zoho Invoice Style -->
+<div id="payments-page" class="h-full flex flex-col">
+    <!-- Page Header -->
+    <div class="flex justify-between items-center mb-4 pr-12">
+        <div class="flex items-center gap-2">
+            <h1 class="text-xl font-semibold text-gray-800">All Received Payments</h1>
+            <button class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-chevron-down text-xs"></i></button>
+        </div>
+        <div class="flex items-center gap-3">
+            <button id="add-payment-btn"
+                class="flex items-center px-3 py-1 bg-activeBlue hover:bg-blue-600 text-white text-md rounded shadow-sm transition-colors">
+                <i class="fas fa-plus mr-2"></i> New
+            </button>
+            <button class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"><i
+                    class="fa-solid fa-ellipsis-vertical"></i></button>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex flex-1 border-t border-gray-200 overflow-hidden mr-12">
+        <!-- Payments List Panel -->
+        <div id="payments-list-panel" class="w-full flex flex-col bg-white transition-all duration-300">
+            <!-- Table Header -->
+            <div class="border-b border-gray-200 bg-gray-50">
+                <div
+                    class="grid grid-cols-[40px_100px_100px_140px_160px_120px_120px_100px_100px_80px_40px] gap-2 px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <div><input type="checkbox" id="select-all-payments" class="rounded border-gray-300 text-blue-600">
+                    </div>
+                    <div>Date <i class="fa-solid fa-sort text-gray-300"></i></div>
+                    <div>Payment #</div>
+                    <div>Reference Number</div>
+                    <div>Customer Name</div>
+                    <div>Invoice#</div>
+                    <div>Mode</div>
+                    <div class="text-right">Amount</div>
+                    <div class="text-right">Unused Amount</div>
+                    <div>Status</div>
+                    <div></div>
+                </div>
+            </div>
+            <div id="payments-list" class="flex-1 overflow-y-auto"></div>
+        </div>
+
+        <!-- Payment Detail Panel -->
+        <div id="payment-detail-panel"
+            class="hidden flex-1 flex flex-col bg-white overflow-hidden border-l border-gray-200">
+            <!-- Detail Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+                <h2 id="detail-payment-number" class="text-xl font-semibold text-gray-800">1</h2>
+                <div class="flex items-center gap-2">
+                    <button id="edit-payment-btn"
+                        class="p-2 text-gray-500 hover:bg-gray-100 rounded flex items-center gap-1"><i
+                            class="fa-solid fa-pen"></i> Edit</button>
+                    <button
+                        class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1"><i
+                            class="fa-solid fa-paper-plane"></i> Send <i
+                            class="fa-solid fa-chevron-down text-xs ml-1"></i></button>
+                    <button
+                        class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1"><i
+                            class="fa-solid fa-file-pdf"></i> PDF/Print <i
+                            class="fa-solid fa-chevron-down text-xs ml-1"></i></button>
+                    <button id="refund-btn"
+                        class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1"><i
+                            class="fa-solid fa-rotate-left"></i> Refund</button>
+                    <button id="close-detail-btn"
+                        class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"><i
+                            class="fa-solid fa-times text-lg"></i></button>
+                </div>
+            </div>
+
+            <!-- Detail Content -->
+            <div class="flex-1 overflow-y-auto p-6">
+                <!-- Payment Receipt Preview -->
+                <div id="payment-preview"
+                    class="bg-white border border-gray-200 shadow-lg max-w-2xl mx-auto p-8 relative">
+                    <!-- Status Ribbon -->
+                    <div id="payment-ribbon" class="absolute -left-1 top-12 transform -rotate-45">
+                        <div id="ribbon-status"
+                            class="bg-green-500 text-white text-xs px-8 py-1 font-semibold shadow-md">PAID</div>
+                    </div>
+
+                    <!-- Header -->
+                    <div class="mb-8">
+                        <div class="text-lg font-bold text-gray-800">D</div>
+                        <div class="text-sm text-gray-600 mt-1">
+                            <div>JRB1</div>
+                            <div>surat Gujarat 395004</div>
+                            <div>India</div>
+                            <div>Invoicer_Email</div>
+                        </div>
+                    </div>
+
+                    <!-- Title -->
+                    <div class="text-center mb-8">
+                        <div class="text-xl font-bold text-gray-700">PAYMENT RECEIPT</div>
+                    </div>
+
+                    <!-- Payment Details -->
+                    <div class="flex justify-between mb-8">
+                        <div class="space-y-3 text-sm">
+                            <div class="flex"><span class="w-48 text-gray-500">Payment Date</span><span
+                                    id="preview-payment-date" class="font-medium">05/02/2026</span></div>
+                            <div class="flex"><span class="w-48 text-gray-500">Reference Number</span><span
+                                    id="preview-reference" class="font-medium">-</span></div>
+                            <div class="flex"><span class="w-48 text-gray-500">Payment Mode</span><span
+                                    id="preview-payment-mode" class="font-medium">Cash</span></div>
+                            <div class="flex"><span class="w-48 text-gray-500">Amount Received In Words</span><span
+                                    id="preview-amount-words" class="font-medium">Indian Rupee One Hundred Only</span>
+                            </div>
+                        </div>
+                        <div class="bg-green-500 text-white px-6 py-4 text-center rounded">
+                            <div class="text-sm">Amount Received</div>
+                            <div id="preview-amount" class="text-2xl font-bold">₹100.00</div>
+                        </div>
+                    </div>
+
+                    <!-- Received From -->
+                    <div class="mb-8">
+                        <div class="text-sm text-gray-500 mb-1">Received From</div>
+                        <div id="preview-customer" class="text-blue-600 font-medium">Mr. ABC DEF</div>
+                    </div>
+
+                    <!-- Authorized Signatory -->
+                    <div class="text-right mb-8">
+                        <div class="text-xs text-gray-500">Authorized Signatory</div>
+                    </div>
+
+                    <!-- Payment For Section -->
+                    <div class="border-t border-gray-200 pt-6">
+                        <h3 class="text-base font-bold text-gray-800 mb-4">Payment for</h3>
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-gray-200">
+                                    <th class="text-left py-2 text-gray-600 font-medium">Invoice Number</th>
+                                    <th class="text-left py-2 text-gray-600 font-medium">Invoice Date</th>
+                                    <th class="text-right py-2 text-gray-600 font-medium">Invoice Amount</th>
+                                    <th class="text-right py-2 text-gray-600 font-medium">Payment Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="preview-invoices-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="text-center text-sm text-gray-500 mt-4">PDF Template : 'Elite Template' <a href="#"
+                        class="text-blue-600 hover:underline">Change</a></div>
+
+                <!-- More Information -->
+                <div class="border-t border-gray-200 mt-6 pt-6">
+                    <h3 class="text-base font-semibold text-gray-800 mb-4">More Information</h3>
+                    <div class="flex text-sm"><span class="w-40 text-gray-500">Notes</span><span id="detail-notes"
+                            class="text-gray-800">-</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Payment Modal -->
+<div id="new-payment-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black bg-opacity-30" onclick="closeNewPaymentModal()"></div>
+    <div class="absolute right-0 top-0 h-full w-full max-w-lg bg-white shadow-2xl">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-800">Record Payment</h2>
+            <button onclick="closeNewPaymentModal()" class="p-2 text-gray-400 hover:text-gray-600"><i
+                    class="fa-solid fa-times text-xl"></i></button>
+        </div>
+        <form id="new-payment-form" class="p-6">
+            <div class="mb-4"><label class="block text-sm text-red-500 mb-1">Invoice*</label>
+                <select id="new-payment-invoice" required
+                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded"></select>
+            </div>
+            <div class="mb-4"><label class="block text-sm text-gray-600 mb-1">Payment Date*</label>
+                <input type="date" id="new-payment-date" required
+                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded">
+            </div>
+            <div class="mb-4"><label class="block text-sm text-gray-600 mb-1">Amount*</label>
+                <input type="number" id="new-payment-amount" required step="0.01" min="0.01"
+                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded">
+            </div>
+            <div class="mb-4"><label class="block text-sm text-gray-600 mb-1">Payment Mode*</label>
+                <select id="new-payment-method" required
+                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded">
+                    <option value="CASH">Cash</option>
+                    <option value="BANK_TRANSFER">Bank Transfer</option>
+                    <option value="UPI">UPI</option>
+                    <option value="CHEQUE">Cheque</option>
+                    <option value="CREDIT_CARD">Credit Card</option>
+                    <option value="DEBIT_CARD">Debit Card</option>
+                </select>
+            </div>
+            <div class="mb-4"><label class="block text-sm text-gray-600 mb-1">Reference#</label>
+                <input type="text" id="new-payment-reference"
+                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded">
+            </div>
+            <div class="mb-4"><label class="block text-sm text-gray-600 mb-1">Notes</label>
+                <textarea id="new-payment-notes" rows="2"
+                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded"></textarea>
+            </div>
+            <div class="flex gap-3">
+                <button type="submit" class="px-6 py-2 bg-activeBlue text-white rounded hover:bg-blue-600">Record
+                    Payment</button>
+                <button type="button" onclick="closeNewPaymentModal()"
+                    class="px-6 py-2 text-gray-700 hover:bg-gray-100 rounded">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    (function () {
+        let currentPaymentId = null, paymentsData = [], invoicesData = [], paymentDetailsMap = {};
+        init();
+
+        async function init() {
+            await loadInvoices(); // Load invoices first to have customer names ready
+            loadPayments();
+            bindEvents();
+        }
+
+        function bindEvents() {
+            document.getElementById('add-payment-btn').addEventListener('click', openNewPaymentModal);
+            document.getElementById('close-detail-btn').addEventListener('click', closeDetailPanel);
+            document.getElementById('new-payment-form').addEventListener('submit', submitNewPayment);
+        }
+
+        async function loadPayments() {
+            const list = document.getElementById('payments-list');
+            list.innerHTML = '<div class="flex justify-center py-12"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>';
+            try {
+                const res = await api.get('/payments/');
+                paymentsData = res.data || [];
+                renderPaymentsList(paymentsData);
+            } catch (e) {
+                list.innerHTML = '<div class="text-center py-8 text-red-500">Failed to load payments</div>';
+            }
+        }
+
+        async function loadInvoices() {
+            try {
+                const res = await api.get('/invoices/');
+                invoicesData = res.data || [];
+                populateInvoiceDropdown();
+            } catch (e) { console.error('Failed to load invoices', e); }
+        }
+
+        function populateInvoiceDropdown() {
+            const sel = document.getElementById('new-payment-invoice');
+            sel.innerHTML = '<option value="">Select Invoice</option>' + invoicesData.filter(i => i.balance_due > 0).map(i =>
+                `<option value="${i.id}" data-balance="${i.balance_due}">${i.invoice_number} - ${i.customer?.name || 'Unknown'} (Balance: ₹${formatNum(i.balance_due)})</option>`
+            ).join('');
+        }
+
+        function renderPaymentsList(payments) {
+            const list = document.getElementById('payments-list');
+            if (!payments.length) { list.innerHTML = '<div class="text-center py-16 text-gray-400"><i class="fa-solid fa-credit-card text-5xl mb-4"></i><p>No payments found</p></div>'; return; }
+
+            list.innerHTML = payments.map(p => {
+                const statusBadge = p.is_voided ? '<span class="px-2 py-0.5 text-xs font-medium rounded bg-red-100 text-red-600">VOIDED</span>' : '<span class="px-2 py-0.5 text-xs font-medium rounded bg-green-100 text-green-600">PAID</span>';
+                const methodLabel = { CASH: 'Cash', BANK_TRANSFER: 'Bank Transfer', UPI: 'UPI', CHEQUE: 'Cheque', CREDIT_CARD: 'Credit Card', DEBIT_CARD: 'Debit Card', ONLINE: 'Online' }[p.payment_method] || p.payment_method;
+                return `<div class="payment-row border-b border-gray-100 hover:bg-blue-50 cursor-pointer ${currentPaymentId === p.id ? 'bg-blue-50' : ''}" data-payment-id="${p.id}">
+        <div class="grid grid-cols-[40px_100px_100px_140px_160px_120px_120px_100px_100px_80px_40px] gap-2 px-4 py-3 items-center text-sm">
+          <div><input type="checkbox" class="payment-checkbox rounded border-gray-300 text-blue-600" onclick="event.stopPropagation()"></div>
+          <div class="text-gray-600">${formatDate(p.payment_date)}</div>
+          <div class="text-gray-800 flex items-center gap-1">${p.payment_number} <i class="fa-regular fa-copy text-gray-400 text-xs"></i></div>
+          <div class="text-gray-500">${escapeHtml(p.reference_number) || '-'}</div>
+          <div class="text-gray-800 font-medium" id="customer-${p.id}">Loading...</div>
+          <div class="text-blue-600" id="invoice-${p.id}">-</div>
+          <div class="text-gray-600">${methodLabel}</div>
+          <div class="text-right">₹${formatNum(p.amount)}</div>
+          <div class="text-right">₹0.00</div>
+          <div>${statusBadge}</div>
+          <div></div>
+        </div>
+      </div>`;
+            }).join('');
+
+            // Load customer/invoice info for each payment
+            payments.forEach(async p => {
+                try {
+                    const detail = await api.get(`/payments/${p.id}`);
+                    paymentDetailsMap[p.id] = detail; // Cache the detail
+
+                    const inv = invoicesData.find(i => i.id === detail.invoice_id);
+                    const custName = inv?.customer?.name || '-';
+                    const invNum = inv?.invoice_number || '-';
+
+                    // Update Standard View
+                    const custEl = document.getElementById(`customer-${p.id}`);
+                    if (custEl) custEl.textContent = custName;
+
+                    const invEl = document.getElementById(`invoice-${p.id}`);
+                    if (invEl) invEl.textContent = invNum;
+
+                    // Update Compact View (if active)
+                    const compactCustEl = document.getElementById(`compact-customer-${p.id}`);
+                    if (compactCustEl) compactCustEl.textContent = custName;
+
+                } catch (e) { }
+            });
+
+            list.querySelectorAll('.payment-row').forEach(row => {
+                row.addEventListener('click', () => selectPayment(row.dataset.paymentId));
+            });
+        }
+
+        async function selectPayment(id) {
+            currentPaymentId = id;
+            document.querySelectorAll('.payment-row').forEach(r => r.classList.toggle('bg-blue-50', r.dataset.paymentId === id));
+
+            const listPanel = document.getElementById('payments-list-panel');
+            const detailPanel = document.getElementById('payment-detail-panel');
+            listPanel.classList.remove('w-full'); listPanel.classList.add('w-80');
+            detailPanel.classList.remove('hidden');
+            updateToCompactView();
+
+            try {
+                const payment = await api.get(`/payments/${id}`);
+                renderPaymentDetail(payment);
+            } catch (e) { showToast('Failed to load payment', 'error'); }
+        }
+
+        function updateToCompactView() {
+            const listPanel = document.getElementById('payments-list-panel');
+            listPanel.querySelector('.border-b.border-gray-200.bg-gray-50').innerHTML = '<div class="px-4 py-3 text-xs font-medium text-gray-500 uppercase">Payments</div>';
+            paymentsData.forEach(p => {
+                const row = listPanel.querySelector(`[data-payment-id="${p.id}"]`);
+                if (row) {
+                    const detail = paymentDetailsMap[p.id];
+                    let customerName = '-';
+                    if (detail) {
+                        const inv = invoicesData.find(i => i.id === detail.invoice_id);
+                        customerName = inv?.customer?.name || '-';
+                    }
+
+                    const methodLabel = { CASH: 'Cash', BANK_TRANSFER: 'Bank Transfer', UPI: 'UPI', CHEQUE: 'Cheque', CREDIT_CARD: 'Credit Card', DEBIT_CARD: 'Debit Card' }[p.payment_method] || p.payment_method;
+                    const statusBadge = p.is_voided ? '<span class="px-2 py-0.5 text-xs font-medium rounded bg-red-100 text-red-600">VOIDED</span>' : '<span class="px-2 py-0.5 text-xs font-medium rounded bg-green-100 text-green-600">PAID</span>';
+                    row.innerHTML = `<div class="px-4 py-3 ${currentPaymentId === p.id ? 'border-l-4 border-l-blue-600' : ''}">
+          <div class="flex justify-between"><div><div class="font-medium text-gray-800" id="compact-customer-${p.id}">${escapeHtml(customerName)}</div>
+          <div class="text-xs text-gray-500">${p.payment_number} · ${formatDate(p.payment_date)}</div>
+          <div class="mt-1">${statusBadge} <span class="text-xs text-gray-500 ml-1">${methodLabel}</span></div></div>
+          <div class="text-sm font-medium text-gray-800">₹${formatNum(p.amount)}</div></div></div>`;
+                }
+            });
+        }
+
+        async function renderPaymentDetail(payment) {
+            document.getElementById('detail-payment-number').textContent = payment.payment_number;
+
+            // Ribbon
+            const ribbon = document.getElementById('ribbon-status');
+            if (payment.is_voided) { ribbon.textContent = 'VOIDED'; ribbon.className = 'bg-red-500 text-white text-xs px-8 py-1 font-semibold shadow-md'; }
+            else { ribbon.textContent = 'PAID'; ribbon.className = 'bg-green-500 text-white text-xs px-8 py-1 font-semibold shadow-md'; }
+
+            const methodLabel = { CASH: 'Cash', BANK_TRANSFER: 'Bank Transfer', UPI: 'UPI', CHEQUE: 'Cheque', CREDIT_CARD: 'Credit Card', DEBIT_CARD: 'Debit Card' }[payment.payment_method] || payment.payment_method;
+            document.getElementById('preview-payment-date').textContent = formatDate(payment.payment_date);
+            document.getElementById('preview-reference').textContent = payment.reference_number || '-';
+            document.getElementById('preview-payment-mode').textContent = methodLabel;
+            document.getElementById('preview-amount').textContent = `₹${formatNum(payment.amount)}`;
+            document.getElementById('preview-amount-words').textContent = `Indian Rupee ${numberToWords(payment.amount)} Only`;
+            document.getElementById('detail-notes').textContent = payment.notes || '-';
+
+            // Get invoice details
+            if (payment.invoice_id) {
+                try {
+                    const inv = await api.get(`/invoices/${payment.invoice_id}`);
+                    document.getElementById('preview-customer').textContent = inv.customer?.name || '-';
+                    document.getElementById('preview-invoices-tbody').innerHTML = `<tr class="border-b border-gray-100">
+          <td class="py-2 text-blue-600">${inv.invoice_number}</td>
+          <td class="py-2">${formatDate(inv.invoice_date)}</td>
+          <td class="py-2 text-right">₹${formatNum(inv.total)}</td>
+          <td class="py-2 text-right">₹${formatNum(payment.amount)}</td>
+        </tr>`;
+                } catch (e) {
+                    document.getElementById('preview-customer').textContent = '-';
+                    document.getElementById('preview-invoices-tbody').innerHTML = '<tr><td colspan="4" class="py-4 text-center text-gray-400">Invoice not found</td></tr>';
+                }
+            }
+        }
+
+        function closeDetailPanel() {
+            currentPaymentId = null;
+            document.getElementById('payments-list-panel').classList.remove('w-80'); document.getElementById('payments-list-panel').classList.add('w-full');
+            document.getElementById('payment-detail-panel').classList.add('hidden');
+            renderPaymentsList(paymentsData);
+        }
+
+        function openNewPaymentModal() {
+            document.getElementById('new-payment-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('new-payment-modal').classList.remove('hidden');
+        }
+
+        window.closeNewPaymentModal = function () { document.getElementById('new-payment-modal').classList.add('hidden'); document.getElementById('new-payment-form').reset(); };
+
+        async function submitNewPayment(e) {
+            e.preventDefault();
+            try {
+                await api.post('/payments/', {
+                    invoice_id: document.getElementById('new-payment-invoice').value,
+                    payment_date: document.getElementById('new-payment-date').value,
+                    amount: parseFloat(document.getElementById('new-payment-amount').value),
+                    payment_method: document.getElementById('new-payment-method').value,
+                    reference_number: document.getElementById('new-payment-reference').value || null,
+                    notes: document.getElementById('new-payment-notes').value || null
+                });
+                showToast('Payment recorded', 'success');
+                closeNewPaymentModal();
+                loadPayments();
+                loadInvoices();
+            } catch (e) { showToast(e.message || 'Failed to record payment', 'error'); }
+        }
+
+        function numberToWords(n) { const v = Math.floor(parseFloat(n)); if (v === 0) return 'Zero'; return v.toLocaleString('en-IN'); }
+        function formatDate(d) { if (!d) return '-'; const dt = new Date(d); return dt.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }); }
+        function formatNum(n) { return n == null ? '0.00' : parseFloat(n).toFixed(2); }
+        function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+        function showToast(msg, type = 'info') {
+            const colors = { success: 'bg-green-500', error: 'bg-red-500', info: 'bg-blue-500' };
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-[100]`;
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => document.body.removeChild(toast), 300); }, 3000);
+        }
+    })();
+</script>

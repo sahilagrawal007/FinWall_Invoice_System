@@ -1,0 +1,770 @@
+<!-- Items Page - Zoho Invoice Style -->
+<div id="items-page" class="h-full flex flex-col">
+  <!-- Page Header -->
+  <div class="flex justify-between items-center mb-4 pr-12">
+    <div class="flex items-center gap-2">
+      <h1 class="text-xl font-semibold text-gray-800">All Items</h1>
+      <button class="text-gray-400 hover:text-gray-600">
+        <i class="fa-solid fa-chevron-down text-xs"></i>
+      </button>
+    </div>
+    <div class="flex items-center gap-3">
+      <button id="add-item-btn"
+        class="flex items-center px-3 py-1 bg-activeBlue hover:bg-blue-600 text-white text-md rounded shadow-sm transition-colors">
+        <i class="fas fa-plus mr-2"></i> New
+      </button>
+      <button class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content Area - Split View -->
+  <div class="flex flex-1 border-t border-gray-200 overflow-hidden mr-12">
+    <!-- Item List Panel (Left) -->
+    <div id="item-list-panel"
+      class="w-full lg:w-80 border-r border-gray-200 flex flex-col bg-white transition-all duration-300">
+      <!-- Search & Filters -->
+      <div class="p-3 border-b border-gray-100">
+        <div class="flex items-center gap-2">
+          <button id="refresh-items-btn" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
+            <i class="fa-solid fa-rotate"></i>
+          </button>
+          <div class="relative flex-1">
+            <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input type="text" id="search-items" placeholder="Search in Items (/)"
+              class="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Item List -->
+      <div id="items-list" class="flex-1 overflow-y-auto">
+        <!-- Items will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Item Detail Panel (Right) - Hidden by default -->
+    <div id="item-detail-panel" class="hidden flex-1 flex flex-col bg-white overflow-hidden">
+      <!-- Detail Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+        <div class="flex items-center gap-4">
+          <h2 id="detail-item-name" class="text-xl font-semibold text-gray-800">Item Name</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="edit-item-btn" class="p-2 text-gray-500 hover:bg-gray-100 rounded" title="Edit">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+          <button class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1">
+            More <i class="fa-solid fa-chevron-down text-xs"></i>
+          </button>
+          <button id="close-detail-btn" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Detail Tabs -->
+      <div class="border-b border-gray-200 bg-white px-6">
+        <nav class="flex gap-6">
+          <button class="detail-tab active py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600"
+            data-tab="overview">Overview</button>
+          <button
+            class="detail-tab py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent"
+            data-tab="transactions">Transactions</button>
+          <button
+            class="detail-tab py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent"
+            data-tab="history">History</button>
+        </nav>
+      </div>
+
+      <!-- Detail Content -->
+      <div class="flex-1 overflow-y-auto p-6" id="detail-content">
+        <!-- Overview Tab Content -->
+        <div id="tab-overview" class="detail-tab-content">
+          <div class="max-w-2xl">
+            <!-- Basic Info -->
+            <div class="space-y-4 mb-8">
+              <div class="flex">
+                <span class="w-40 text-sm text-gray-500">Item Type</span>
+                <span id="detail-item-type" class="text-sm text-gray-800">Sales Items</span>
+              </div>
+              <div class="flex">
+                <span class="w-40 text-sm text-gray-500">Unit</span>
+                <span id="detail-unit" class="text-sm text-gray-800">pcs</span>
+              </div>
+              <div class="flex">
+                <span class="w-40 text-sm text-gray-500">SKU</span>
+                <span id="detail-sku" class="text-sm text-gray-800">-</span>
+              </div>
+              <div class="flex">
+                <span class="w-40 text-sm text-gray-500">Created Source</span>
+                <span id="detail-source" class="text-sm text-gray-800">User</span>
+              </div>
+            </div>
+
+            <!-- Sales Information -->
+            <div class="border-t border-gray-100 pt-6">
+              <h3 class="text-base font-semibold text-gray-800 mb-4">Sales Information</h3>
+              <div class="space-y-4">
+                <div class="flex">
+                  <span class="w-40 text-sm text-gray-500">Selling Price</span>
+                  <span id="detail-rate" class="text-sm text-gray-800 font-medium">₹0.00</span>
+                </div>
+                <div class="flex">
+                  <span class="w-40 text-sm text-gray-500">Description</span>
+                  <span id="detail-description" class="text-sm text-gray-800">-</span>
+                </div>
+                <div class="flex">
+                  <span class="w-40 text-sm text-gray-500">Tax</span>
+                  <span id="detail-tax" class="text-sm text-gray-800">-</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transactions Tab Content -->
+        <div id="tab-transactions" class="detail-tab-content hidden">
+          <!-- Filters -->
+          <div class="flex items-center gap-4 mb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-gray-500">Filter By:</span>
+              <div class="relative">
+                <button id="filter-by-btn"
+                  class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1 bg-white">
+                  <span id="filter-by-text">Quotes</span>
+                  <i class="fa-solid fa-chevron-down text-xs"></i>
+                </button>
+                <div id="filter-by-dropdown"
+                  class="hidden absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded shadow-lg z-10 min-w-32">
+                  <button class="filter-option w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    data-filter="quotes">Quotes</button>
+                  <button class="filter-option w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    data-filter="invoices">Invoices</button>
+                  <button class="filter-option w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    data-filter="delivery_challans">Delivery Challans</button>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-gray-500">Status:</span>
+              <div class="relative">
+                <button id="status-btn"
+                  class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1 bg-white">
+                  <span id="status-text">All</span>
+                  <i class="fa-solid fa-chevron-down text-xs"></i>
+                </button>
+                <div id="status-dropdown"
+                  class="hidden absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded shadow-lg z-50 min-w-32">
+                  <button class="status-option w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    data-status="all">All</button>
+                  <button class="status-option w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    data-status="draft">Draft</button>
+                  <button class="status-option w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    data-status="sent">Sent</button>
+                  <button class="status-option w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    data-status="client">Client</button>
+                  <button class="status-option w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    data-status="viewed">Viewed</button>
+                  <button class="status-option w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    data-status="accepted">Accepted</button>
+                  <button class="status-option w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    data-status="invoiced">Invoiced</button>
+                  <button class="status-option w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    data-status="declined">Declined</button>
+                  <button class="status-option w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    data-status="expired">Expired</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transactions Table -->
+          <div class="bg-white border border-gray-200 rounded">
+            <table class="w-full h-screen text-sm">
+              <thead>
+                <tr class="border-b border-gray-200 bg-gray-50">
+                  <th class="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase">Date <i
+                      class="fa-solid fa-sort text-gray-300 ml-1"></i></th>
+                  <th class="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase">Quote Number</th>
+                  <th class="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase">Customer Name</th>
+                  <th class="text-right py-3 px-4 text-xs font-medium text-gray-500 uppercase">Quantity Sold</th>
+                  <th class="text-right py-3 px-4 text-xs font-medium text-gray-500 uppercase">Price</th>
+                  <th class="text-right py-3 px-4 text-xs font-medium text-gray-500 uppercase">Total</th>
+                </tr>
+              </thead>
+              <tbody id="transactions-tbody">
+                <!-- Placeholder data for now -->
+                <tr class="text-center text-gray-400">
+                  <td colspan="6" class="py-8">No transactions found for this item</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- History Tab Content -->
+        <div id="tab-history" class="detail-tab-content hidden">
+          <div class="text-center py-8 text-gray-400">
+            <i class="fa-solid fa-clock-rotate-left text-4xl mb-3"></i>
+            <p>History tracking coming soon</p>
+            <p class="text-sm mt-1">Changes to this item will be logged here</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Item Slide Panel -->
+<div id="item-slide-panel" class="fixed inset-0 z-50 hidden">
+  <!-- Backdrop -->
+  <div id="slide-panel-backdrop" class="absolute inset-0 bg-black bg-opacity-30 transition-opacity"></div>
+
+  <!-- Panel -->
+  <div id="slide-panel-content"
+    class="absolute right-0 top-0 h-full w-full max-w-2xl bg-white shadow-2xl transform translate-x-full transition-transform duration-300">
+    <!-- Panel Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+      <h2 id="panel-title" class="text-lg font-semibold text-gray-800">New Item</h2>
+      <button id="close-panel-btn" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
+        <i class="fa-solid fa-times text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Panel Body -->
+    <div class="overflow-y-auto h-[calc(100%-130px)]">
+      <form id="item-form" class="p-6">
+        <input type="hidden" id="item-id" />
+
+        <!-- Name (Required) -->
+        <div class="grid grid-cols-[120px_1fr] gap-4 mb-5 items-center">
+          <label class="text-sm text-red-500 font-medium">Name*</label>
+          <input type="text" id="item_name" required
+            class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 max-w-md" />
+        </div>
+
+        <!-- Type -->
+        <div class="grid grid-cols-[120px_1fr] gap-4 mb-5 items-center">
+          <label class="text-sm text-gray-600 flex items-center gap-1">
+            Type
+            <i class="fa-solid fa-circle-info text-gray-400 text-xs"></i>
+          </label>
+          <div class="flex items-center gap-6">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="item_type" value="PRODUCT" class="text-blue-600 focus:ring-blue-500" />
+              <span class="text-sm text-gray-700">Goods</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="item_type" value="SERVICE" checked class="text-blue-600 focus:ring-blue-500" />
+              <span class="text-sm text-gray-700">Service</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Unit -->
+        <div class="grid grid-cols-[120px_1fr] gap-4 mb-5 items-center">
+          <label class="text-sm text-gray-600 flex items-center gap-1">
+            Unit
+            <i class="fa-solid fa-circle-info text-gray-400 text-xs"></i>
+          </label>
+          <div class="relative max-w-md">
+            <select id="item_unit"
+              class="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 appearance-none bg-white">
+              <option value="">Select or type to add</option>
+              <option value="pcs">pcs</option>
+              <option value="unit">unit</option>
+              <option value="box">box</option>
+              <option value="kg">kg</option>
+              <option value="g">g</option>
+              <option value="ltr">ltr</option>
+              <option value="ml">ml</option>
+              <option value="m">m</option>
+              <option value="cm">cm</option>
+              <option value="hrs">hrs</option>
+              <option value="days">days</option>
+            </select>
+            <i
+              class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+          </div>
+        </div>
+
+        <!-- Image Upload Area -->
+        <div class="grid grid-cols-[120px_1fr] gap-4 mb-8">
+          <div></div>
+          <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center max-w-xs bg-gray-50">
+            <i class="fa-regular fa-image text-3xl text-gray-400 mb-2"></i>
+            <p class="text-sm text-gray-500">Drag image(s) here or</p>
+            <button type="button" class="text-sm text-blue-600 hover:underline">Browse Images</button>
+          </div>
+        </div>
+
+        <!-- Sales Information Section -->
+        <div class="border-t border-gray-200 pt-6 mb-6">
+          <h3 class="text-base font-semibold text-gray-800 mb-4">Sales Information</h3>
+        </div>
+
+        <!-- Selling Price (Required) -->
+        <div class="grid grid-cols-[120px_1fr_1fr] gap-4 mb-5 items-center">
+          <label class="text-sm text-red-500 font-medium">Selling Price*</label>
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-500">INR</span>
+            <input type="number" id="item_rate" required step="0.01" min="0"
+              class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 w-40" />
+          </div>
+          <div class="flex items-start gap-2">
+            <label class="text-sm text-gray-600 whitespace-nowrap">Description</label>
+            <textarea id="item_description" rows="2"
+              class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+          </div>
+        </div>
+
+        <!-- SKU (Optional) -->
+        <div class="grid grid-cols-[120px_1fr] gap-4 mb-5 items-center">
+          <label class="text-sm text-gray-600">SKU</label>
+          <input type="text" id="item_sku"
+            class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 max-w-md"
+            placeholder="Stock Keeping Unit" />
+        </div>
+
+        <!-- Tax Selection (Optional) -->
+        <div class="grid grid-cols-[120px_1fr] gap-4 mb-5 items-center">
+          <label class="text-sm text-gray-600">Tax</label>
+          <select id="item_tax"
+            class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 max-w-md">
+            <option value="">No Tax</option>
+            <option value="gst_18">GST 18%</option>
+            <option value="gst_12">GST 12%</option>
+            <option value="gst_5">GST 5%</option>
+          </select>
+        </div>
+      </form>
+    </div>
+
+    <!-- Panel Footer -->
+    <div class="absolute bottom-0 left-0 right-0 flex items-center gap-3 px-6 py-4 border-t border-gray-200 bg-white">
+      <button type="submit" form="item-form" id="save-item-btn"
+        class="px-6 py-2 bg-activeBlue text-white rounded hover:bg-blue-600 font-medium">
+        Save
+      </button>
+      <button type="button" id="cancel-btn" class="px-6 py-2 text-gray-700 hover:bg-gray-100 rounded font-medium">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Items Page JavaScript
+  (function () {
+    let currentItemId = null;
+    let editingItemId = null;
+    let itemsData = [];
+    let currentFilter = 'quotes';
+    let currentStatus = 'all';
+
+    // Initialize
+    init();
+
+    function init() {
+      loadItems();
+      bindEvents();
+    }
+
+    // Event Bindings
+    function bindEvents() {
+      // Add Item Button
+      document.getElementById('add-item-btn').addEventListener('click', openAddPanel);
+
+      // Close Panel
+      document.getElementById('close-panel-btn').addEventListener('click', closePanel);
+      document.getElementById('cancel-btn').addEventListener('click', closePanel);
+      document.getElementById('slide-panel-backdrop').addEventListener('click', closePanel);
+
+      // Form Submit
+      document.getElementById('item-form').addEventListener('submit', saveItem);
+
+      // Search
+      document.getElementById('search-items').addEventListener('input', debounce(function (e) {
+        loadItems(e.target.value);
+      }, 300));
+
+      // Refresh
+      document.getElementById('refresh-items-btn').addEventListener('click', function () {
+        loadItems();
+      });
+
+      // Close Detail Panel
+      document.getElementById('close-detail-btn').addEventListener('click', closeDetailPanel);
+
+      // Edit Item
+      document.getElementById('edit-item-btn').addEventListener('click', function () {
+        if (currentItemId) {
+          openEditPanel(currentItemId);
+        }
+      });
+
+      // Detail Tabs
+      document.querySelectorAll('.detail-tab').forEach(tab => {
+        tab.addEventListener('click', function () {
+          switchDetailTab(this.dataset.tab);
+        });
+      });
+
+      // Filter By Dropdown
+      document.getElementById('filter-by-btn').addEventListener('click', function (e) {
+        e.stopPropagation();
+        document.getElementById('filter-by-dropdown').classList.toggle('hidden');
+        document.getElementById('status-dropdown').classList.add('hidden');
+      });
+
+      document.querySelectorAll('.filter-option').forEach(option => {
+        option.addEventListener('click', function () {
+          currentFilter = this.dataset.filter;
+          document.getElementById('filter-by-text').textContent = this.textContent;
+          document.getElementById('filter-by-dropdown').classList.add('hidden');
+          updateTransactionsTable();
+        });
+      });
+
+      // Status Dropdown
+      document.getElementById('status-btn').addEventListener('click', function (e) {
+        e.stopPropagation();
+        document.getElementById('status-dropdown').classList.toggle('hidden');
+        document.getElementById('filter-by-dropdown').classList.add('hidden');
+      });
+
+      document.querySelectorAll('.status-option').forEach(option => {
+        option.addEventListener('click', function () {
+          currentStatus = this.dataset.status;
+          document.getElementById('status-text').textContent = this.textContent;
+          document.getElementById('status-dropdown').classList.add('hidden');
+          updateTransactionsTable();
+        });
+      });
+
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', function () {
+        document.getElementById('filter-by-dropdown').classList.add('hidden');
+        document.getElementById('status-dropdown').classList.add('hidden');
+      });
+    }
+
+    // Debounce helper
+    function debounce(func, wait) {
+      let timeout;
+      return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+
+    // Load Items
+    async function loadItems(search = '') {
+      const listContainer = document.getElementById('items-list');
+      listContainer.innerHTML = `
+        <div class="flex justify-center items-center py-12">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      `;
+
+      try {
+        let endpoint = '/items/';
+        const params = new URLSearchParams();
+        if (search) params.append('search', search);
+        if (params.toString()) endpoint += `?${params.toString()}`;
+
+        const response = await api.get(endpoint);
+        itemsData = response.data || [];
+        renderItemList(itemsData);
+      } catch (error) {
+        console.error('Error loading items:', error);
+        listContainer.innerHTML = `
+          <div class="text-center py-8 text-red-500">
+            <i class="fa-solid fa-exclamation-circle text-2xl mb-2"></i>
+            <p>Failed to load items</p>
+            <button onclick="location.reload()" class="text-blue-600 hover:underline mt-2">Retry</button>
+          </div>
+        `;
+      }
+    }
+
+    // Render Item List
+    function renderItemList(items) {
+      const listContainer = document.getElementById('items-list');
+
+      if (!items || items.length === 0) {
+        listContainer.innerHTML = `
+          <div class="text-center py-8 text-gray-400">
+            <i class="fa-solid fa-box text-4xl mb-3"></i>
+            <p>No items found</p>
+            <p class="text-sm mt-1">Click "New" to add an item</p>
+          </div>
+        `;
+        return;
+      }
+
+      const html = items.map(item => `
+        <div class="item-row border-b border-gray-100 px-4 py-3 hover:bg-blue-50 cursor-pointer transition-colors flex items-center justify-between ${currentItemId === item.id ? 'bg-blue-50 border-l-4 border-l-blue-600' : ''}"
+             data-item-id="${item.id}">
+          <div class="flex items-center gap-3">
+            <input type="checkbox" class="item-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500" onclick="event.stopPropagation()">
+            <div class="font-medium text-gray-800">${escapeHtml(item.name)}</div>
+          </div>
+          <div class="text-sm text-gray-600">₹${formatNumber(item.rate)}</div>
+        </div>
+      `).join('');
+
+      listContainer.innerHTML = html;
+
+      // Add click handlers
+      listContainer.querySelectorAll('.item-row').forEach(row => {
+        row.addEventListener('click', function () {
+          const itemId = this.dataset.itemId;
+          selectItem(itemId);
+        });
+      });
+    }
+
+    // Format number
+    function formatNumber(num) {
+      if (num === null || num === undefined) return '0.00';
+      return parseFloat(num).toFixed(2);
+    }
+
+    // Select Item and show detail panel
+    async function selectItem(itemId) {
+      currentItemId = itemId;
+
+      // Update list selection styling
+      document.querySelectorAll('.item-row').forEach(row => {
+        if (row.dataset.itemId === itemId) {
+          row.classList.add('bg-blue-50', 'border-l-4', 'border-l-blue-600');
+        } else {
+          row.classList.remove('bg-blue-50', 'border-l-4', 'border-l-blue-600');
+        }
+      });
+
+      // Show detail panel
+      const listPanel = document.getElementById('item-list-panel');
+      const detailPanel = document.getElementById('item-detail-panel');
+
+      listPanel.classList.remove('w-full');
+      listPanel.classList.add('w-80');
+      detailPanel.classList.remove('hidden');
+
+      // Load item details
+      try {
+        const item = await api.get(`/items/${itemId}`);
+        renderItemDetail(item);
+      } catch (error) {
+        console.error('Error loading item details:', error);
+        showToast('Failed to load item details', 'error');
+      }
+    }
+
+    // Render Item Detail
+    function renderItemDetail(item) {
+      document.getElementById('detail-item-name').textContent = item.name || '-';
+      document.getElementById('detail-item-type').textContent = item.item_type === 'PRODUCT' ? 'Goods' : 'Sales Items';
+      document.getElementById('detail-unit').textContent = item.unit || 'unit';
+      document.getElementById('detail-sku').textContent = item.sku || '-';
+      document.getElementById('detail-source').textContent = 'User';
+      document.getElementById('detail-rate').textContent = `₹${formatNumber(item.rate)}`;
+      document.getElementById('detail-description').textContent = item.description || '-';
+      document.getElementById('detail-tax').textContent = item.tax ? item.tax.name : '-';
+    }
+
+    // Update Transactions Table (placeholder for future implementation)
+    function updateTransactionsTable() {
+      const tbody = document.getElementById('transactions-tbody');
+      // This would fetch actual transaction data based on currentFilter and currentStatus
+      // For now, show placeholder message
+
+      let filterLabel = '';
+      switch (currentFilter) {
+        case 'quotes': filterLabel = 'quotes'; break;
+        case 'invoices': filterLabel = 'invoices'; break;
+        case 'delivery_challans': filterLabel = 'delivery challans'; break;
+      }
+
+      tbody.innerHTML = `
+        <tr class="text-center text-gray-400">
+          <td colspan="6" class="py-8">No ${filterLabel} found for this item${currentStatus !== 'all' ? ` with status "${currentStatus}"` : ''}</td>
+        </tr>
+      `;
+    }
+
+    // Close Detail Panel
+    function closeDetailPanel() {
+      currentItemId = null;
+
+      const listPanel = document.getElementById('item-list-panel');
+      const detailPanel = document.getElementById('item-detail-panel');
+
+      listPanel.classList.remove('w-80');
+      listPanel.classList.add('w-full');
+      detailPanel.classList.add('hidden');
+
+      // Remove selection styling
+      document.querySelectorAll('.item-row').forEach(row => {
+        row.classList.remove('bg-blue-50', 'border-l-4', 'border-l-blue-600');
+      });
+    }
+
+    // Switch Detail Tab
+    function switchDetailTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.detail-tab').forEach(tab => {
+        if (tab.dataset.tab === tabName) {
+          tab.classList.add('active', 'text-blue-600', 'border-blue-600');
+          tab.classList.remove('text-gray-500', 'border-transparent');
+        } else {
+          tab.classList.remove('active', 'text-blue-600', 'border-blue-600');
+          tab.classList.add('text-gray-500', 'border-transparent');
+        }
+      });
+
+      // Update tab content
+      document.querySelectorAll('.detail-tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+    }
+
+    // Open Add Panel
+    function openAddPanel() {
+      editingItemId = null;
+      document.getElementById('panel-title').textContent = 'New Item';
+      document.getElementById('item-form').reset();
+      document.getElementById('item-id').value = '';
+      // Reset to default SERVICE type
+      document.querySelector('input[name="item_type"][value="SERVICE"]').checked = true;
+      openPanel();
+    }
+
+    // Open Edit Panel
+    async function openEditPanel(itemId) {
+      try {
+        editingItemId = itemId;
+        document.getElementById('panel-title').textContent = 'Edit Item';
+
+        const item = await api.get(`/items/${itemId}`);
+        populateForm(item);
+        openPanel();
+      } catch (error) {
+        console.error('Error loading item for edit:', error);
+        showToast('Failed to load item', 'error');
+      }
+    }
+
+    // Populate Form with Item Data
+    function populateForm(item) {
+      document.getElementById('item-id').value = item.id;
+      document.querySelector(`input[name="item_type"][value="${item.item_type}"]`).checked = true;
+      document.getElementById('item_name').value = item.name || '';
+      document.getElementById('item_unit').value = item.unit || '';
+      document.getElementById('item_rate').value = item.rate || '';
+      document.getElementById('item_description').value = item.description || '';
+      document.getElementById('item_sku').value = item.sku || '';
+    }
+
+    // Open Panel
+    function openPanel() {
+      const panel = document.getElementById('item-slide-panel');
+      const content = document.getElementById('slide-panel-content');
+
+      panel.classList.remove('hidden');
+      setTimeout(() => {
+        content.classList.remove('translate-x-full');
+      }, 10);
+    }
+
+    // Close Panel
+    function closePanel() {
+      const panel = document.getElementById('item-slide-panel');
+      const content = document.getElementById('slide-panel-content');
+
+      content.classList.add('translate-x-full');
+      setTimeout(() => {
+        panel.classList.add('hidden');
+      }, 300);
+
+      editingItemId = null;
+    }
+
+    // Save Item
+    async function saveItem(e) {
+      e.preventDefault();
+
+      const saveBtn = document.getElementById('save-item-btn');
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving...';
+
+      try {
+        const itemData = {
+          item_type: document.querySelector('input[name="item_type"]:checked').value,
+          name: document.getElementById('item_name').value,
+          unit: document.getElementById('item_unit').value || 'unit',
+          rate: parseFloat(document.getElementById('item_rate').value),
+          description: document.getElementById('item_description').value || null,
+          sku: document.getElementById('item_sku').value || null,
+        };
+
+        if (editingItemId) {
+          await api.patch(`/items/${editingItemId}`, itemData);
+          showToast('Item updated successfully', 'success');
+        } else {
+          await api.post('/items/', itemData);
+          showToast('Item created successfully', 'success');
+        }
+
+        closePanel();
+        loadItems();
+
+        // If we were viewing this item, refresh the detail
+        if (currentItemId === editingItemId) {
+          selectItem(editingItemId);
+        }
+      } catch (error) {
+        console.error('Error saving item:', error);
+        showToast(error.message || 'Failed to save item', 'error');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save';
+      }
+    }
+
+    // Show Toast
+    function showToast(message, type = 'info') {
+      const colors = {
+        success: 'bg-green-500',
+        error: 'bg-red-500',
+        warning: 'bg-yellow-500',
+        info: 'bg-blue-500'
+      };
+
+      const toast = document.createElement('div');
+      toast.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-[100] transition-opacity duration-300`;
+      toast.textContent = message;
+
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 300);
+      }, 3000);
+    }
+
+    // Escape HTML
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  })();
+</script>

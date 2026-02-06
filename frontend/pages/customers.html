@@ -1,0 +1,1036 @@
+<!-- Customers Page - Zoho Invoice Style -->
+<div id="customers-page" class="h-full flex flex-col">
+  <!-- Page Header -->
+  <div class="flex justify-between items-center mb-4 pr-12">
+    <div class="flex items-center gap-2">
+      <h1 class="text-xl font-semibold text-gray-800">All Customers</h1>
+      <button class="text-gray-400 hover:text-gray-600">
+        <i class="fa-solid fa-chevron-down text-xs"></i>
+      </button>
+    </div>
+    <div class="flex items-center gap-3">
+      <button id="add-customer-btn"
+        class="flex items-center px-3 py-1 bg-activeBlue hover:bg-blue-600 text-white text-md rounded shadow-sm transition-colors">
+        <i class="fas fa-plus mr-2"></i> New
+      </button>
+      <button class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content Area - Split View -->
+  <div class="flex flex-1 border-t border-gray-200 overflow-hidden mr-12">
+    <!-- Customer List Panel (Left) -->
+    <div id="customer-list-panel"
+      class="w-full lg:w-80 border-r border-gray-200 flex flex-col bg-white transition-all duration-300">
+      <!-- Search & Filters -->
+      <div class="p-3 border-b border-gray-100">
+        <div class="relative">
+          <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input type="text" id="search-customers" placeholder="Search in Customers (/)"
+            class="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+        </div>
+      </div>
+
+      <!-- Customer List -->
+      <div id="customers-list" class="flex-1 overflow-y-auto">
+        <!-- Customers will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Customer Detail Panel (Right) - Hidden by default -->
+    <div id="customer-detail-panel" class="hidden flex-1 flex flex-col bg-white overflow-hidden">
+      <!-- Detail Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+        <div class="flex items-center gap-4">
+          <h2 id="detail-customer-name" class="text-xl font-semibold text-gray-800">Customer Name</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="edit-customer-btn" class="px-4 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50">
+            Edit
+          </button>
+          <button class="p-2 text-gray-500 hover:bg-gray-100 rounded">
+            <i class="fa-solid fa-bookmark"></i>
+          </button>
+          <button id="new-transaction-btn"
+            class="px-4 py-1.5 text-sm bg-activeBlue text-white rounded hover:bg-blue-600 flex items-center gap-1">
+            New Transaction <i class="fa-solid fa-chevron-down text-xs"></i>
+          </button>
+          <button class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1">
+            More <i class="fa-solid fa-chevron-down text-xs"></i>
+          </button>
+          <button id="close-detail-btn" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Detail Tabs -->
+      <div class="border-b border-gray-200 bg-white px-6">
+        <nav class="flex gap-6">
+          <button class="detail-tab active py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600"
+            data-tab="overview">Overview</button>
+          <button
+            class="detail-tab py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent"
+            data-tab="comments">Comments</button>
+          <button
+            class="detail-tab py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent"
+            data-tab="transactions">Transactions</button>
+          <button
+            class="detail-tab py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent"
+            data-tab="mails">Mails</button>
+          <button
+            class="detail-tab py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent"
+            data-tab="statement">Statement</button>
+        </nav>
+      </div>
+
+      <!-- Detail Content -->
+      <div class="flex-1 overflow-y-auto p-6" id="detail-content">
+        <!-- Overview Tab Content -->
+        <div id="tab-overview" class="detail-tab-content grid grid-cols-2 gap-6">
+          <!-- Left Column -->
+          <div class="space-y-6">
+            <!-- Company Name -->
+            <div id="detail-company-name" class="text-sm text-gray-600 font-medium"></div>
+
+            <!-- Contact Card -->
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-500">
+                <i class="fa-solid fa-user text-lg"></i>
+              </div>
+              <div class="text-sm">
+                <div id="detail-display-name" class="font-medium text-gray-800"></div>
+                <div id="detail-email" class="text-gray-600"></div>
+                <div id="detail-phone" class="text-gray-600"></div>
+                <div id="detail-mobile" class="text-gray-600"></div>
+                <div id="detail-portal-status" class="text-orange-500 text-xs mt-1"></div>
+              </div>
+            </div>
+
+            <!-- Address Section -->
+            <div class="border-t border-gray-100 pt-4">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Address</h3>
+                <button class="text-gray-400 hover:text-gray-600">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+              </div>
+              <div class="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <div class="font-medium text-gray-700 mb-1">Billing Address</div>
+                  <div id="detail-billing-address" class="text-gray-500">No Billing Address</div>
+                  <button class="text-blue-600 text-xs hover:underline mt-1">+ New Address</button>
+                </div>
+                <div>
+                  <div class="font-medium text-gray-700 mb-1">Shipping Address</div>
+                  <div id="detail-shipping-address" class="text-gray-500">No Shipping Address</div>
+                  <button class="text-blue-600 text-xs hover:underline mt-1">+ New Address</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Other Details Section -->
+            <div class="border-t border-gray-100 pt-4">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Other Details</h3>
+                <button class="text-gray-400 hover:text-gray-600">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+              </div>
+              <div class="space-y-3 text-sm">
+                <div class="flex">
+                  <span class="w-40 text-gray-500">Customer Type</span>
+                  <span id="detail-customer-type" class="text-gray-800">Business</span>
+                </div>
+                <div class="flex">
+                  <span class="w-40 text-gray-500">Default Currency</span>
+                  <span id="detail-currency" class="text-gray-800">INR</span>
+                </div>
+                <div class="flex">
+                  <span class="w-40 text-gray-500">Portal Status</span>
+                  <span id="detail-portal-enabled" class="text-green-600">• Enabled</span>
+                </div>
+                <div class="flex">
+                  <span class="w-40 text-gray-500">Payment Terms</span>
+                  <span id="detail-payment-terms" class="text-gray-800">Due on Receipt</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact Persons Section -->
+            <div class="border-t border-gray-100 pt-4">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Contact Persons</h3>
+                <button
+                  class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs hover:bg-blue-700">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div class="text-sm text-gray-400 text-center py-4">
+                No contact persons found.
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="space-y-6">
+            <!-- Payment Due Period -->
+            <div class="text-sm">
+              <div class="text-gray-500 mb-1">Payment due period</div>
+              <div id="detail-due-period" class="font-medium text-gray-800">Due on Receipt</div>
+            </div>
+
+            <!-- Receivables Table -->
+            <div>
+              <h3 class="text-sm font-semibold text-gray-700 mb-3">Receivables</h3>
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-gray-100">
+                    <th class="text-left py-2 text-gray-500 font-medium text-xs uppercase">Currency</th>
+                    <th class="text-right py-2 text-gray-500 font-medium text-xs uppercase">Outstanding Receivables</th>
+                    <th class="text-right py-2 text-gray-500 font-medium text-xs uppercase">Unused Credits</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="py-2 text-gray-800">INR- Indian Rupee</td>
+                    <td id="detail-outstanding" class="py-2 text-right text-gray-800">₹0.00</td>
+                    <td id="detail-credits" class="py-2 text-right text-gray-800">₹0.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Income and Expense Chart -->
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-sm font-semibold text-gray-700">Income and Expense</h3>
+                  <span class="text-xs text-gray-400">This chart is displayed in the organization's base
+                    currency.</span>
+                </div>
+                <button class="text-xs text-blue-600 hover:underline">Last 6 Months ▼</button>
+              </div>
+              <div class="h-32 border border-gray-100 rounded flex items-center justify-center text-gray-400 text-sm">
+                Chart placeholder
+              </div>
+              <div class="text-sm mt-2">
+                <span class="text-gray-500">Total Income (Last 6 Months) -</span>
+                <span class="font-medium text-gray-800">₹0.00</span>
+              </div>
+            </div>
+
+            <!-- Timeline -->
+            <div>
+              <h3 class="text-sm font-semibold text-gray-700 mb-3">Recent Activity</h3>
+              <div id="detail-timeline" class="text-sm text-gray-400 text-center py-4">
+                No recent activity
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other Tab Contents (hidden by default) -->
+        <div id="tab-comments" class="detail-tab-content hidden">
+          <div class="text-center text-gray-400 py-8">No comments yet</div>
+        </div>
+        <div id="tab-transactions" class="detail-tab-content hidden">
+          <div class="text-center text-gray-400 py-8">No transactions yet</div>
+        </div>
+        <div id="tab-mails" class="detail-tab-content hidden">
+          <div class="text-center text-gray-400 py-8">No mails sent</div>
+        </div>
+        <div id="tab-statement" class="detail-tab-content hidden">
+          <div class="text-center text-gray-400 py-8">Statement not available</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Customer Slide Panel -->
+<div id="customer-slide-panel" class="fixed inset-0 z-50 hidden">
+  <!-- Backdrop -->
+  <div id="slide-panel-backdrop" class="absolute inset-0 bg-black bg-opacity-30 transition-opacity"></div>
+
+  <!-- Panel -->
+  <div id="slide-panel-content"
+    class="absolute right-0 top-0 h-full w-full max-w-3xl bg-white shadow-2xl transform translate-x-full transition-transform duration-300">
+    <!-- Panel Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+      <h2 id="panel-title" class="text-lg font-semibold text-gray-800">New Customer</h2>
+      <button id="close-panel-btn" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
+        <i class="fa-solid fa-times text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Panel Body -->
+    <div class="overflow-y-auto h-[calc(100%-130px)]">
+      <form id="customer-form" class="p-6">
+        <input type="hidden" id="customer-id" />
+
+        <!-- Customer Type -->
+        <div class="flex items-center gap-6 mb-6">
+          <label class="text-sm text-gray-600 flex items-center gap-1">
+            Customer Type
+            <i class="fa-solid fa-circle-info text-gray-400 text-xs"></i>
+          </label>
+          <div class="flex items-center gap-6">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="customer_type" value="BUSINESS" checked
+                class="text-blue-600 focus:ring-blue-500" />
+              <span class="text-sm text-gray-700">Business</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="customer_type" value="INDIVIDUAL" class="text-blue-600 focus:ring-blue-500" />
+              <span class="text-sm text-gray-700">Individual</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Primary Contact -->
+        <div class="grid grid-cols-[140px_1fr] gap-4 mb-4 items-center">
+          <label class="text-sm text-gray-600 flex items-center gap-1">
+            Primary Contact
+            <i class="fa-solid fa-circle-info text-gray-400 text-xs"></i>
+          </label>
+          <div class="grid grid-cols-3 gap-2">
+            <select id="salutation"
+              class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
+              <option value="">Salutation</option>
+              <option value="Mr.">Mr.</option>
+              <option value="Ms.">Ms.</option>
+              <option value="Mrs.">Mrs.</option>
+              <option value="Dr.">Dr.</option>
+            </select>
+            <input type="text" id="first_name" placeholder="First Name"
+              class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+            <input type="text" id="last_name" placeholder="Last Name"
+              class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+          </div>
+        </div>
+
+        <!-- Company Name -->
+        <div class="grid grid-cols-[140px_1fr] gap-4 mb-4 items-center">
+          <label class="text-sm text-gray-600">Company Name</label>
+          <input type="text" id="company_name"
+            class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 max-w-md" />
+        </div>
+
+        <!-- Display Name -->
+        <div class="grid grid-cols-[140px_1fr] gap-4 mb-4 items-center">
+          <label class="text-sm text-red-600 flex items-center gap-1">
+            Display Name*
+            <i class="fa-solid fa-circle-info text-gray-400 text-xs"></i>
+          </label>
+          <div class="relative max-w-md">
+            <input type="text" id="display_name" required list="display-name-options"
+              class="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+              placeholder="Select or type to add" />
+            <datalist id="display-name-options"></datalist>
+          </div>
+        </div>
+
+        <!-- Currency -->
+        <div class="grid grid-cols-[140px_1fr] gap-4 mb-4 items-center">
+          <label class="text-sm text-gray-600">Currency</label>
+          <div>
+            <select id="currency_code"
+              class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 max-w-md">
+              <option value="INR">INR - Indian Rupee</option>
+              <option value="USD">USD - US Dollar</option>
+              <option value="EUR">EUR - Euro</option>
+              <option value="GBP">GBP - British Pound</option>
+            </select>
+            <p class="text-xs text-gray-400 mt-1">Currency cannot be edited as multi-currency handling is unavailable.
+            </p>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="grid grid-cols-[140px_1fr] gap-4 mb-4 items-center">
+          <label class="text-sm text-gray-600 flex items-center gap-1">
+            Email Address
+            <i class="fa-solid fa-circle-info text-gray-400 text-xs"></i>
+          </label>
+          <input type="email" id="email"
+            class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 max-w-md" />
+        </div>
+
+        <!-- Phone -->
+        <div class="grid grid-cols-[140px_1fr] gap-4 mb-4 items-center">
+          <label class="text-sm text-gray-600 flex items-center gap-1">
+            Phone
+            <i class="fa-solid fa-circle-info text-gray-400 text-xs"></i>
+          </label>
+          <div class="flex gap-2 max-w-md">
+            <div class="flex items-center gap-1">
+              <select class="px-2 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 w-20">
+                <option value="+91">+91</option>
+                <option value="+1">+1</option>
+                <option value="+44">+44</option>
+              </select>
+              <input type="text" id="phone" placeholder="Work Phone"
+                class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 flex-1" />
+            </div>
+            <div class="flex items-center gap-1">
+              <select class="px-2 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 w-20">
+                <option value="+91">+91</option>
+                <option value="+1">+1</option>
+                <option value="+44">+44</option>
+              </select>
+              <input type="text" id="mobile" placeholder="Mobile"
+                class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 flex-1" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs for Additional Details -->
+        <div class="border-t border-gray-200 mt-6 pt-4">
+          <nav class="flex gap-6 mb-4">
+            <button type="button"
+              class="form-tab active text-sm font-medium text-blue-600 border-b-2 border-blue-600 pb-2"
+              data-form-tab="other-details">Other Details</button>
+            <button type="button"
+              class="form-tab text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent pb-2"
+              data-form-tab="address">Address</button>
+            <button type="button"
+              class="form-tab text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent pb-2"
+              data-form-tab="contact-persons">Contact Persons</button>
+            <button type="button"
+              class="form-tab text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent pb-2"
+              data-form-tab="remarks">Remarks</button>
+          </nav>
+
+          <!-- Other Details Tab -->
+          <div id="form-tab-other-details" class="form-tab-content">
+            <div class="grid grid-cols-[140px_1fr] gap-4 mb-4 items-center">
+              <label class="text-sm text-gray-600">Tax ID / GSTIN</label>
+              <input type="text" id="tax_id"
+                class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 max-w-md" />
+            </div>
+            <div class="grid grid-cols-[140px_1fr] gap-4 mb-4 items-center">
+              <label class="text-sm text-gray-600">Payment Terms</label>
+              <select id="payment_terms_days"
+                class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 max-w-md">
+                <option value="0">Due on Receipt</option>
+                <option value="7">Net 7</option>
+                <option value="15">Net 15</option>
+                <option value="30" selected>Net 30</option>
+                <option value="45">Net 45</option>
+                <option value="60">Net 60</option>
+                <option value="90">Net 90</option>
+              </select>
+            </div>
+            <div class="grid grid-cols-[140px_1fr] gap-4 mb-4 items-center">
+              <label class="text-sm text-gray-600">Credit Limit</label>
+              <input type="number" id="credit_limit" step="0.01" min="0"
+                class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 max-w-md"
+                placeholder="0.00" />
+            </div>
+          </div>
+
+          <!-- Address Tab -->
+          <div id="form-tab-address" class="form-tab-content hidden">
+            <div class="grid grid-cols-2 gap-8">
+              <!-- Billing Address -->
+              <div>
+                <h4 class="font-medium text-gray-800 mb-4">Billing Address</h4>
+                <div class="space-y-4">
+                  <div>
+                    <label class="text-sm text-gray-600">Attention</label>
+                    <input type="text" id="billing_attention"
+                      class="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                  </div>
+                  <div>
+                    <label class="text-sm text-gray-600">Country/Region</label>
+                    <select id="billing_country"
+                      class="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
+                      <option value="">Select</option>
+                      <option value="India" selected>India</option>
+                      <option value="USA">USA</option>
+                      <option value="UK">UK</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="text-sm text-gray-600">Address</label>
+                    <input type="text" id="billing_address_line1" placeholder="Street 1"
+                      class="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                    <input type="text" id="billing_address_line2" placeholder="Street 2"
+                      class="w-full mt-2 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                  </div>
+                  <div>
+                    <label class="text-sm text-gray-600">City</label>
+                    <input type="text" id="billing_city"
+                      class="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                  </div>
+                  <div>
+                    <label class="text-sm text-gray-600">State</label>
+                    <input type="text" id="billing_state" placeholder="Select or type to add"
+                      class="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                  </div>
+                  <div>
+                    <label class="text-sm text-gray-600">Postal Code</label>
+                    <input type="text" id="billing_postal_code"
+                      class="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Shipping Address -->
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="font-medium text-gray-800">Shipping Address</h4>
+                  <button type="button" id="copy-billing-btn" class="text-sm text-blue-600 hover:underline">
+                    <i class="fa-solid fa-arrow-down mr-1"></i> Copy billing address
+                  </button>
+                </div>
+                <div class="space-y-4">
+                  <div>
+                    <label class="text-sm text-gray-600">Attention</label>
+                    <input type="text" id="shipping_attention"
+                      class="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                  </div>
+                  <div>
+                    <label class="text-sm text-gray-600">Country/Region</label>
+                    <select id="shipping_country"
+                      class="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
+                      <option value="">Select</option>
+                      <option value="India">India</option>
+                      <option value="USA">USA</option>
+                      <option value="UK">UK</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="text-sm text-gray-600">Address</label>
+                    <input type="text" id="shipping_address_line1" placeholder="Street 1"
+                      class="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                    <input type="text" id="shipping_address_line2" placeholder="Street 2"
+                      class="w-full mt-2 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                  </div>
+                  <div>
+                    <label class="text-sm text-gray-600">City</label>
+                    <input type="text" id="shipping_city"
+                      class="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                  </div>
+                  <div>
+                    <label class="text-sm text-gray-600">State</label>
+                    <input type="text" id="shipping_state" placeholder="Select or type to add"
+                      class="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                  </div>
+                  <div>
+                    <label class="text-sm text-gray-600">Postal Code</label>
+                    <input type="text" id="shipping_postal_code"
+                      class="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Persons Tab -->
+          <div id="form-tab-contact-persons" class="form-tab-content hidden">
+            <div class="text-center py-8 text-gray-400">
+              <p class="mb-4">No contact persons added</p>
+              <button type="button" class="text-blue-600 hover:underline text-sm">
+                <i class="fa-solid fa-plus mr-1"></i> Add Contact Person
+              </button>
+            </div>
+          </div>
+
+          <!-- Remarks Tab -->
+          <div id="form-tab-remarks" class="form-tab-content hidden">
+            <div class="grid grid-cols-[140px_1fr] gap-4 items-start">
+              <label class="text-sm text-gray-600">Notes</label>
+              <textarea id="notes" rows="4"
+                class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                placeholder="Internal notes about this customer..."></textarea>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Panel Footer -->
+    <div class="absolute bottom-0 left-0 right-0 flex items-center gap-3 px-6 py-4 border-t border-gray-200 bg-white">
+      <button type="submit" form="customer-form" id="save-customer-btn"
+        class="px-6 py-2 bg-activeBlue text-white rounded hover:bg-blue-600 font-medium">
+        Save
+      </button>
+      <button type="button" id="cancel-btn" class="px-6 py-2 text-gray-700 hover:bg-gray-100 rounded font-medium">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Customers Page JavaScript
+  (function () {
+    let currentCustomerId = null;
+    let editingCustomerId = null;
+    let customersData = [];
+
+    // Initialize
+    init();
+
+    function init() {
+      loadCustomers();
+      bindEvents();
+    }
+
+    function bindEvents() {
+      // Add Customer Button
+      document.getElementById('add-customer-btn').addEventListener('click', openAddPanel);
+
+      // Close Panel
+      document.getElementById('close-panel-btn').addEventListener('click', closePanel);
+      document.getElementById('cancel-btn').addEventListener('click', closePanel);
+      document.getElementById('slide-panel-backdrop').addEventListener('click', closePanel);
+
+      // Form Submit
+      document.getElementById('customer-form').addEventListener('submit', saveCustomer);
+
+      // Search
+      document.getElementById('search-customers').addEventListener('input', debounce(function (e) {
+        loadCustomers(e.target.value);
+      }, 300));
+
+      // Close Detail Panel
+      document.getElementById('close-detail-btn').addEventListener('click', closeDetailPanel);
+
+      // Edit Customer
+      document.getElementById('edit-customer-btn').addEventListener('click', function () {
+        if (currentCustomerId) {
+          openEditPanel(currentCustomerId);
+        }
+      });
+
+      // Detail Tabs
+      document.querySelectorAll('.detail-tab').forEach(tab => {
+        tab.addEventListener('click', function () {
+          switchDetailTab(this.dataset.tab);
+        });
+      });
+
+      // Form Tabs
+      document.querySelectorAll('.form-tab').forEach(tab => {
+        tab.addEventListener('click', function () {
+          switchFormTab(this.dataset.formTab);
+        });
+      });
+
+      // Copy billing address to shipping
+      document.getElementById('copy-billing-btn').addEventListener('click', copyBillingToShipping);
+
+      // Auto-generate display name options
+      document.getElementById('first_name').addEventListener('input', updateDisplayNameOptions);
+      document.getElementById('last_name').addEventListener('input', updateDisplayNameOptions);
+      document.getElementById('company_name').addEventListener('input', updateDisplayNameOptions);
+    }
+
+    // Debounce helper
+    function debounce(func, wait) {
+      let timeout;
+      return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+
+    // Load Customers
+    async function loadCustomers(search = '') {
+      const listContainer = document.getElementById('customers-list');
+      listContainer.innerHTML = `
+        <div class="flex justify-center items-center py-12">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      `;
+
+      try {
+        let endpoint = '/customers/';
+        if (search) {
+          endpoint += `?search=${encodeURIComponent(search)}`;
+        }
+
+        const response = await api.get(endpoint);
+        customersData = response.data || [];
+        renderCustomerList(customersData);
+      } catch (error) {
+        console.error('Error loading customers:', error);
+        listContainer.innerHTML = `
+          <div class="text-center py-8 text-red-500">
+            <i class="fa-solid fa-exclamation-circle text-2xl mb-2"></i>
+            <p>Failed to load customers</p>
+            <button onclick="location.reload()" class="text-blue-600 hover:underline mt-2">Retry</button>
+          </div>
+        `;
+      }
+    }
+
+    // Render Customer List
+    function renderCustomerList(customers) {
+      const listContainer = document.getElementById('customers-list');
+
+      if (!customers || customers.length === 0) {
+        listContainer.innerHTML = `
+          <div class="text-center py-8 text-gray-400">
+            <i class="fa-solid fa-users text-4xl mb-3"></i>
+            <p>No customers found</p>
+            <p class="text-sm mt-1">Click "New" to add a customer</p>
+          </div>
+        `;
+        return;
+      }
+
+      const html = customers.map(customer => `
+        <div class="customer-item border-b border-gray-100 px-4 py-3 hover:bg-blue-50 cursor-pointer transition-colors ${currentCustomerId === customer.id ? 'bg-blue-50 border-l-4 border-l-blue-600' : ''}"
+             data-customer-id="${customer.id}">
+          <div class="flex items-center gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="font-medium text-gray-800 truncate">${escapeHtml(customer.name)}</div>
+              <div class="text-sm text-gray-500">₹0.00</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      listContainer.innerHTML = html;
+
+      // Add click handlers
+      listContainer.querySelectorAll('.customer-item').forEach(item => {
+        item.addEventListener('click', function () {
+          const customerId = this.dataset.customerId;
+          selectCustomer(customerId);
+        });
+      });
+    }
+
+    // Select Customer and show detail panel
+    async function selectCustomer(customerId) {
+      currentCustomerId = customerId;
+
+      // Update list selection styling
+      document.querySelectorAll('.customer-item').forEach(item => {
+        if (item.dataset.customerId === customerId) {
+          item.classList.add('bg-blue-50', 'border-l-4', 'border-l-blue-600');
+        } else {
+          item.classList.remove('bg-blue-50', 'border-l-4', 'border-l-blue-600');
+        }
+      });
+
+      // Show detail panel
+      const listPanel = document.getElementById('customer-list-panel');
+      const detailPanel = document.getElementById('customer-detail-panel');
+
+      listPanel.classList.remove('w-full');
+      listPanel.classList.add('w-80');
+      detailPanel.classList.remove('hidden');
+
+      // Load customer details
+      try {
+        const customer = await api.get(`/customers/${customerId}`);
+        renderCustomerDetail(customer);
+      } catch (error) {
+        console.error('Error loading customer details:', error);
+        showToast('Failed to load customer details', 'error');
+      }
+    }
+
+    // Render Customer Detail
+    function renderCustomerDetail(customer) {
+      document.getElementById('detail-customer-name').textContent = customer.name || '-';
+      document.getElementById('detail-company-name').textContent = customer.company_name || '';
+      document.getElementById('detail-display-name').textContent = customer.name || '-';
+      document.getElementById('detail-email').textContent = customer.email ? `✉ ${customer.email}` : '';
+      document.getElementById('detail-phone').textContent = customer.phone ? `☎ ${customer.phone}` : '';
+      document.getElementById('detail-customer-type').textContent = customer.customer_type === 'BUSINESS' ? 'Business' : 'Individual';
+      document.getElementById('detail-currency').textContent = customer.currency_code || 'INR';
+      document.getElementById('detail-payment-terms').textContent = getPaymentTermsLabel(customer.payment_terms_days);
+      document.getElementById('detail-due-period').textContent = getPaymentTermsLabel(customer.payment_terms_days);
+
+      // Billing Address
+      const billingAddr = formatAddress(customer.billing_address_line1, customer.billing_address_line2, customer.billing_city, customer.billing_state, customer.billing_postal_code, customer.billing_country);
+      document.getElementById('detail-billing-address').textContent = billingAddr || 'No Billing Address';
+
+      // Shipping Address
+      const shippingAddr = formatAddress(customer.shipping_address_line1, customer.shipping_address_line2, customer.shipping_city, customer.shipping_state, customer.shipping_postal_code, customer.shipping_country);
+      document.getElementById('detail-shipping-address').textContent = shippingAddr || 'No Shipping Address';
+    }
+
+    // Format Address
+    function formatAddress(line1, line2, city, state, postal, country) {
+      const parts = [line1, line2, city, state, postal, country].filter(Boolean);
+      return parts.join(', ');
+    }
+
+    // Get Payment Terms Label
+    function getPaymentTermsLabel(days) {
+      if (days === 0) return 'Due on Receipt';
+      return `Net ${days}`;
+    }
+
+    // Close Detail Panel
+    function closeDetailPanel() {
+      currentCustomerId = null;
+
+      const listPanel = document.getElementById('customer-list-panel');
+      const detailPanel = document.getElementById('customer-detail-panel');
+
+      listPanel.classList.remove('w-80');
+      listPanel.classList.add('w-full');
+      detailPanel.classList.add('hidden');
+
+      // Remove selection styling
+      document.querySelectorAll('.customer-item').forEach(item => {
+        item.classList.remove('bg-blue-50', 'border-l-4', 'border-l-blue-600');
+      });
+    }
+
+    // Switch Detail Tab
+    function switchDetailTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.detail-tab').forEach(tab => {
+        if (tab.dataset.tab === tabName) {
+          tab.classList.add('active', 'text-blue-600', 'border-blue-600');
+          tab.classList.remove('text-gray-500', 'border-transparent');
+        } else {
+          tab.classList.remove('active', 'text-blue-600', 'border-blue-600');
+          tab.classList.add('text-gray-500', 'border-transparent');
+        }
+      });
+
+      // Update tab content
+      document.querySelectorAll('.detail-tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+    }
+
+    // Switch Form Tab
+    function switchFormTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.form-tab').forEach(tab => {
+        if (tab.dataset.formTab === tabName) {
+          tab.classList.add('active', 'text-blue-600', 'border-blue-600');
+          tab.classList.remove('text-gray-500', 'border-transparent');
+        } else {
+          tab.classList.remove('active', 'text-blue-600', 'border-blue-600');
+          tab.classList.add('text-gray-500', 'border-transparent');
+        }
+      });
+
+      // Update tab content
+      document.querySelectorAll('.form-tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+      document.getElementById(`form-tab-${tabName}`).classList.remove('hidden');
+    }
+
+    // Open Add Panel
+    function openAddPanel() {
+      editingCustomerId = null;
+      document.getElementById('panel-title').textContent = 'New Customer';
+      document.getElementById('customer-form').reset();
+      document.getElementById('customer-id').value = '';
+      openPanel();
+    }
+
+    // Open Edit Panel
+    async function openEditPanel(customerId) {
+      try {
+        editingCustomerId = customerId;
+        document.getElementById('panel-title').textContent = 'Edit Customer';
+
+        const customer = await api.get(`/customers/${customerId}`);
+        populateForm(customer);
+        openPanel();
+      } catch (error) {
+        console.error('Error loading customer for edit:', error);
+        showToast('Failed to load customer', 'error');
+      }
+    }
+
+    // Populate Form with Customer Data
+    function populateForm(customer) {
+      document.getElementById('customer-id').value = customer.id;
+      document.querySelector(`input[name="customer_type"][value="${customer.customer_type}"]`).checked = true;
+      document.getElementById('display_name').value = customer.name || '';
+      document.getElementById('company_name').value = customer.company_name || '';
+      document.getElementById('email').value = customer.email || '';
+      document.getElementById('phone').value = customer.phone || '';
+      document.getElementById('currency_code').value = customer.currency_code || 'INR';
+      document.getElementById('tax_id').value = customer.tax_id || '';
+      document.getElementById('payment_terms_days').value = customer.payment_terms_days || 30;
+      document.getElementById('credit_limit').value = customer.credit_limit || '';
+      document.getElementById('notes').value = customer.notes || '';
+
+      // Billing Address
+      document.getElementById('billing_address_line1').value = customer.billing_address_line1 || '';
+      document.getElementById('billing_address_line2').value = customer.billing_address_line2 || '';
+      document.getElementById('billing_city').value = customer.billing_city || '';
+      document.getElementById('billing_state').value = customer.billing_state || '';
+      document.getElementById('billing_postal_code').value = customer.billing_postal_code || '';
+      document.getElementById('billing_country').value = customer.billing_country || 'India';
+
+      // Shipping Address
+      document.getElementById('shipping_address_line1').value = customer.shipping_address_line1 || '';
+      document.getElementById('shipping_address_line2').value = customer.shipping_address_line2 || '';
+      document.getElementById('shipping_city').value = customer.shipping_city || '';
+      document.getElementById('shipping_state').value = customer.shipping_state || '';
+      document.getElementById('shipping_postal_code').value = customer.shipping_postal_code || '';
+      document.getElementById('shipping_country').value = customer.shipping_country || '';
+    }
+
+    // Open Panel
+    function openPanel() {
+      const panel = document.getElementById('customer-slide-panel');
+      const content = document.getElementById('slide-panel-content');
+
+      panel.classList.remove('hidden');
+      setTimeout(() => {
+        content.classList.remove('translate-x-full');
+      }, 10);
+    }
+
+    // Close Panel
+    function closePanel() {
+      const panel = document.getElementById('customer-slide-panel');
+      const content = document.getElementById('slide-panel-content');
+
+      content.classList.add('translate-x-full');
+      setTimeout(() => {
+        panel.classList.add('hidden');
+      }, 300);
+
+      editingCustomerId = null;
+    }
+
+    // Save Customer
+    async function saveCustomer(e) {
+      e.preventDefault();
+
+      const saveBtn = document.getElementById('save-customer-btn');
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving...';
+
+      try {
+        const customerData = {
+          customer_type: document.querySelector('input[name="customer_type"]:checked').value,
+          name: document.getElementById('display_name').value,
+          email: document.getElementById('email').value || null,
+          phone: document.getElementById('phone').value || null,
+          currency_code: document.getElementById('currency_code').value,
+          tax_id: document.getElementById('tax_id').value || null,
+          payment_terms_days: parseInt(document.getElementById('payment_terms_days').value) || 30,
+          credit_limit: document.getElementById('credit_limit').value ? parseFloat(document.getElementById('credit_limit').value) : null,
+          notes: document.getElementById('notes').value || null,
+
+          // Billing Address
+          billing_address_line1: document.getElementById('billing_address_line1').value || null,
+          billing_address_line2: document.getElementById('billing_address_line2').value || null,
+          billing_city: document.getElementById('billing_city').value || null,
+          billing_state: document.getElementById('billing_state').value || null,
+          billing_postal_code: document.getElementById('billing_postal_code').value || null,
+          billing_country: document.getElementById('billing_country').value || 'India',
+
+          // Shipping Address
+          shipping_address_line1: document.getElementById('shipping_address_line1').value || null,
+          shipping_address_line2: document.getElementById('shipping_address_line2').value || null,
+          shipping_city: document.getElementById('shipping_city').value || null,
+          shipping_state: document.getElementById('shipping_state').value || null,
+          shipping_postal_code: document.getElementById('shipping_postal_code').value || null,
+          shipping_country: document.getElementById('shipping_country').value || null,
+        };
+
+        if (editingCustomerId) {
+          await api.patch(`/customers/${editingCustomerId}`, customerData);
+          showToast('Customer updated successfully', 'success');
+        } else {
+          await api.post('/customers/', customerData);
+          showToast('Customer created successfully', 'success');
+        }
+
+        closePanel();
+        loadCustomers();
+
+        // If we were viewing this customer, refresh the detail
+        if (currentCustomerId === editingCustomerId) {
+          selectCustomer(editingCustomerId);
+        }
+      } catch (error) {
+        console.error('Error saving customer:', error);
+        showToast(error.message || 'Failed to save customer', 'error');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save';
+      }
+    }
+
+    // Copy Billing to Shipping
+    function copyBillingToShipping() {
+      document.getElementById('shipping_address_line1').value = document.getElementById('billing_address_line1').value;
+      document.getElementById('shipping_address_line2').value = document.getElementById('billing_address_line2').value;
+      document.getElementById('shipping_city').value = document.getElementById('billing_city').value;
+      document.getElementById('shipping_state').value = document.getElementById('billing_state').value;
+      document.getElementById('shipping_postal_code').value = document.getElementById('billing_postal_code').value;
+      document.getElementById('shipping_country').value = document.getElementById('billing_country').value;
+    }
+
+    // Update Display Name Options
+    function updateDisplayNameOptions() {
+      const firstName = document.getElementById('first_name').value;
+      const lastName = document.getElementById('last_name').value;
+      const companyName = document.getElementById('company_name').value;
+      const salutation = document.getElementById('salutation').value;
+
+      const options = [];
+
+      if (firstName && lastName) {
+        options.push(`${firstName} ${lastName}`);
+        if (salutation) {
+          options.push(`${salutation} ${firstName} ${lastName}`);
+        }
+      }
+      if (firstName) options.push(firstName);
+      if (lastName) options.push(lastName);
+      if (companyName) options.push(companyName);
+
+      const datalist = document.getElementById('display-name-options');
+      datalist.innerHTML = options.map(opt => `<option value="${escapeHtml(opt)}">`).join('');
+    }
+
+    // Show Toast
+    function showToast(message, type = 'info') {
+      const colors = {
+        success: 'bg-green-500',
+        error: 'bg-red-500',
+        warning: 'bg-yellow-500',
+        info: 'bg-blue-500'
+      };
+
+      const toast = document.createElement('div');
+      toast.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-[100] transition-opacity duration-300`;
+      toast.textContent = message;
+
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 300);
+      }, 3000);
+    }
+
+    // Escape HTML
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  })();
+</script>

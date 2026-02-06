@@ -1,0 +1,554 @@
+<!-- Welcome Section -->
+<div class="flex justify-between items-start mb-6 max-w-5xl">
+  <div class="flex gap-4 items-center">
+    <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500">
+      <i class="fa-regular fa-file text-lg"></i>
+    </div>
+    <div>
+      <h1 id="welcome-name" class="text-lg font-medium text-gray-800">Hello, User</h1>
+      <p id="welcome-org" class="text-xs text-gray-500">Loading...</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Display user information
+  (function () {
+    if (typeof Auth !== "undefined") {
+      const user = Auth.getUser();
+      if (user) {
+        // Update welcome message
+        document.getElementById("welcome-name").textContent =
+          `Hello, ${user.first_name || user.full_name || "User"}`;
+
+        // Update organization name
+        if (user.organization) {
+          document.getElementById("welcome-org").textContent =
+            user.organization.name || "Organization";
+        } else {
+          document.getElementById("welcome-org").textContent = user.email;
+        }
+      }
+    }
+  })();
+</script>
+
+<!-- Tabs -->
+<div class="border-b border-gray-200 mb-6 max-w-5xl">
+  <nav class="-mb-px flex space-x-8">
+    <a
+      href="#"
+      class="border-blue-500 text-blue-600 whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm"
+      >Dashboard</a
+    >
+    <a
+      href="#"
+      class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm"
+      >Recent Updates</a
+    >
+  </nav>
+</div>
+
+<!-- Total Receivables - Fixed width like Zoho -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 mb-6 max-w-5xl mr-14">
+  <div class="px-6 py-4 border-b border-gray-50 flex justify-between items-center bg-blue-50/60">
+    <h3
+      title="Current and overdue amount that you're yet to receive from customers"
+      class="text-base font-medium text-gray-700 cursor-pointer"
+    >
+      Total Receivables
+    </h3>
+    <div class="relative">
+      <button
+        id="new-receivable-btn"
+        class="text-blue-500 text-xs font-medium flex items-center hover:underline"
+      >
+        <i class="fa-solid fa-circle-plus mr-1"></i> New
+      </button>
+      <div
+        id="new-receivable-dropdown"
+        class="hidden absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg border border-gray-200 z-10"
+      >
+        <a
+          href="pages/invoices.html"
+          class="nav-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+        >
+          <i class="fa-solid fa-plus text-xs mr-2"></i>New Invoice
+        </a>
+        <a
+          href="pages/payments.html"
+          class="nav-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+        >
+          <i class="fa-solid fa-plus text-xs mr-2"></i>New Customer Payment
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="p-6">
+    <div class="text-xs text-gray-400 mb-1">Total Receivables ₹0.00</div>
+    <div class="w-full bg-gray-100 rounded-full h-1.5 mb-6">
+      <div class="bg-yellow-400 h-1.5 rounded-full" style="width: 0%"></div>
+    </div>
+
+    <div class="grid grid-cols-5 gap-4 divide-x divide-gray-100">
+      <div class="px-2">
+        <div class="text-green-500 text-xs font-semibold uppercase tracking-wide mb-1">Current</div>
+        <div class="text-xl font-normal text-gray-800">₹0.00</div>
+      </div>
+      <div class="px-2 pl-4">
+        <div class="text-orange-500 text-xs font-semibold uppercase tracking-wide mb-1">
+          Overdue
+        </div>
+        <div class="text-xl font-normal text-gray-800">₹0.00</div>
+        <div class="text-xs text-gray-400 mt-1">1-15 Days</div>
+      </div>
+      <div class="px-2 pl-4">
+        <div class="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-1">&nbsp;</div>
+        <div class="text-xl font-normal text-gray-800">₹0.00</div>
+        <div class="text-xs text-gray-400 mt-1">16-30 Days</div>
+      </div>
+      <div class="px-2 pl-4">
+        <div class="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-1">&nbsp;</div>
+        <div class="text-xl font-normal text-gray-800">₹0.00</div>
+        <div class="text-xs text-gray-400 mt-1">31-45 Days</div>
+      </div>
+      <div class="px-2 pl-4">
+        <div class="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-1">&nbsp;</div>
+        <div class="text-xl font-normal text-gray-800">₹0.00</div>
+        <div class="text-xs text-gray-400 mt-1">Above 45 days</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sales and Expenses Chart - Fixed width like Zoho -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 mb-6 max-w-5xl mr-14">
+  <div class="px-6 py-4 border-b border-gray-50 flex justify-between items-center bg-blue-50/60">
+    <h3 class="text-sm font-medium text-gray-700 flex items-center gap-1">
+      Sales and Expenses
+      <i
+        title="Displays total sales, receipts, and expenses for the current year"
+        class="fa-solid fa-circle-info text-gray-400 text-xs cursor-pointer"
+      ></i>
+    </h3>
+    <div class="relative">
+      <button
+        id="sales-expenses-btn"
+        class="text-xs text-gray-500 bg-white border border-gray-200 rounded px-2 py-1 flex items-center gap-1 hover:bg-gray-50"
+      >
+        <span id="sales-expenses-label">This Fiscal Year</span>
+        <i class="fa-solid fa-chevron-down text-xs"></i>
+      </button>
+      <div
+        id="sales-expenses-dropdown"
+        class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-10"
+      >
+        <a
+          href="#"
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+          data-period="thisFiscal"
+          >This Fiscal Year</a
+        >
+        <a
+          href="#"
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+          data-period="prevFiscal"
+          >Previous Fiscal Year</a
+        >
+        <a
+          href="#"
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+          data-period="last12"
+          >Last 12 Months</a
+        >
+      </div>
+    </div>
+  </div>
+  <div class="p-6 flex">
+    <!-- Chart Placeholder Area -->
+    <div class="flex-1 relative h-56 border-l border-b border-gray-200 mr-6">
+      <!-- Y Axis Labels -->
+      <div
+        class="absolute -left-8 bottom-0 flex flex-col justify-between h-full text-[10px] text-gray-400 py-1 text-right w-6"
+      >
+        <span>5 K</span><span>4 K</span><span>3 K</span><span>2 K</span><span>1 K</span
+        ><span>0</span>
+      </div>
+      <!-- X Axis Labels -->
+      <div
+        id="chart-x-axis"
+        class="absolute bottom-[-24px] w-full flex justify-between text-[10px] text-gray-400 px-2"
+      >
+        <div class="text-center">Apr<br />2025</div>
+        <div class="text-center">May<br />2025</div>
+        <div class="text-center">Jun<br />2025</div>
+        <div class="text-center">Jul<br />2025</div>
+        <div class="text-center">Aug<br />2025</div>
+        <div class="text-center">Sep<br />2025</div>
+        <div class="text-center">Oct<br />2025</div>
+        <div class="text-center">Nov<br />2025</div>
+        <div class="text-center">Dec<br />2025</div>
+        <div class="text-center">Jan<br />2026</div>
+        <div class="text-center">Feb<br />2026</div>
+        <div class="text-center">Mar<br />2026</div>
+      </div>
+      <!-- Dotted Grid Lines -->
+      <div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+        <div class="border-t border-dotted border-gray-100 h-0 w-full"></div>
+        <div class="border-t border-dotted border-gray-100 h-0 w-full"></div>
+        <div class="border-t border-dotted border-gray-100 h-0 w-full"></div>
+        <div class="border-t border-dotted border-gray-100 h-0 w-full"></div>
+        <div class="border-t border-dotted border-gray-100 h-0 w-full"></div>
+        <div class="border-t border-transparent h-0 w-full"></div>
+      </div>
+    </div>
+
+    <!-- Legend/Stats -->
+    <div class="w-40 flex flex-col gap-5 justify-center border-l border-gray-100 pl-6">
+      <div class="text-right">
+        <div class="text-xs text-blue-500 font-normal mb-1">Total Sales</div>
+        <div class="text-lg font-normal text-gray-800">₹0.00</div>
+      </div>
+      <div class="text-right">
+        <div class="text-xs text-green-500 font-normal mb-1">Total Receipts</div>
+        <div class="text-lg font-normal text-gray-800">₹0.00</div>
+      </div>
+      <div class="text-right">
+        <div class="text-xs text-red-500 font-normal mb-1">Total Expenses</div>
+        <div class="text-lg font-normal text-gray-800">₹0.00</div>
+      </div>
+    </div>
+  </div>
+  <div class="px-6 pb-4 text-[10px] text-gray-400">
+    * Sales value displayed is inclusive of tax and inclusive of credits.
+  </div>
+</div>
+
+<!-- Footer Widgets Row - Projects and Top Expenses side by side with fixed width -->
+<div class="grid grid-cols-2 gap-6 mb-6 max-w-5xl mr-14">
+  <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-5 min-h-[140px]">
+    <h3 class="text-sm font-medium text-gray-700 mb-4">Projects</h3>
+    <div class="text-sm text-gray-400 text-center py-6">Add Project(s) to this watchlist</div>
+  </div>
+  <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-5 min-h-[140px]">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-sm font-medium text-gray-700">Top Expenses</h3>
+      <div class="relative">
+        <button
+          id="top-expenses-btn"
+          class="text-xs text-gray-500 flex items-center gap-1 hover:text-gray-700"
+        >
+          <span id="top-expenses-label">This Fiscal Year</span>
+          <i class="fa-solid fa-chevron-down text-xs"></i>
+        </button>
+        <div
+          id="top-expenses-dropdown"
+          class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-10"
+        >
+          <a
+            href="#"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            data-expense-period="This Fiscal Year"
+            >This Fiscal Year</a
+          >
+          <a
+            href="#"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            data-expense-period="This Quarter"
+            >This Quarter</a
+          >
+          <a
+            href="#"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            data-expense-period="This Month"
+            >This Month</a
+          >
+          <a
+            href="#"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            data-expense-period="Previous Fiscal Year"
+            >Previous Fiscal Year</a
+          >
+          <a
+            href="#"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            data-expense-period="Previous Quarter"
+            >Previous Quarter</a
+          >
+          <a
+            href="#"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            data-expense-period="Previous Month"
+            >Previous Month</a
+          >
+          <a
+            href="#"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            data-expense-period="Last 6 Months"
+            >Last 6 Months</a
+          >
+          <a
+            href="#"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            data-expense-period="Last 12 Months"
+            >Last 12 Months</a
+          >
+        </div>
+      </div>
+    </div>
+    <div class="text-sm text-gray-400 text-center py-6">
+      <span id="top-expenses-text">No Expense recorded for This Fiscal Year</span>
+    </div>
+  </div>
+</div>
+
+<!-- Sales, Receipts and Dues Table -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 mb-20 max-w-2xl mr-14">
+  <div class="px-5 py-4 border-b border-gray-50 bg-blue-50/60">
+    <h3 class="text-sm font-medium text-gray-700 flex items-center gap-1">
+      Sales, Receipts, and Dues
+      <i
+        title="Displays total sales, receipts, and dues over different time periods"
+        class="fa-solid fa-circle-info text-gray-400 text-xs cursor-pointer"
+      ></i>
+    </h3>
+  </div>
+  <div class="p-5">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="text-gray-500 text-xs uppercase tracking-wide">
+          <th class="text-left py-2 font-medium"></th>
+          <th class="text-right py-2 font-medium">Sales</th>
+          <th class="text-right py-2 font-medium">Receipts</th>
+          <th class="text-right py-2 font-medium">Due</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-700">
+        <tr class="border-t border-gray-50">
+          <td class="py-3">Today</td>
+          <td class="text-right py-3">₹0.00</td>
+          <td class="text-right py-3">₹0.00</td>
+          <td class="text-right py-3">₹0.00</td>
+        </tr>
+        <tr class="border-t border-gray-50">
+          <td class="py-3">This Week</td>
+          <td class="text-right py-3">₹0.00</td>
+          <td class="text-right py-3">₹0.00</td>
+          <td class="text-right py-3">₹0.00</td>
+        </tr>
+        <tr class="border-t border-gray-50">
+          <td class="py-3">This Month</td>
+          <td class="text-right py-3">₹0.00</td>
+          <td class="text-right py-3">₹0.00</td>
+          <td class="text-right py-3">₹0.00</td>
+        </tr>
+        <tr class="border-t border-gray-50">
+          <td class="py-3">This Quarter</td>
+          <td class="text-right py-3">₹0.00</td>
+          <td class="text-right py-3">₹0.00</td>
+          <td class="text-right py-3">₹0.00</td>
+        </tr>
+        <tr class="border-t border-gray-50">
+          <td class="py-3">This Year</td>
+          <td class="text-right py-3">₹0.00</td>
+          <td class="text-right py-3">₹0.00</td>
+          <td class="text-right py-3">₹0.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Floating Assistant -->
+<div
+  class="fixed bottom-6 right-16 bg-white border border-gray-200 shadow-lg rounded-full px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-gray-50 transition-all z-50"
+>
+  <div
+    class="w-6 h-6 rounded-full bg-gradient-to-tr from-purple-400 to-pink-400 flex items-center justify-center text-white text-xs"
+  >
+    <i class="fa-solid fa-robot"></i>
+  </div>
+  <span class="text-sm font-medium text-gray-700">Need Assistance?</span>
+</div>
+
+<script>
+  // Dropdown functionality
+  (function () {
+    // A) Total Receivables dropdown
+    const newReceivableBtn = document.getElementById("new-receivable-btn");
+    const newReceivableDropdown = document.getElementById("new-receivable-dropdown");
+
+    if (newReceivableBtn && newReceivableDropdown) {
+      newReceivableBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        newReceivableDropdown.classList.toggle("hidden");
+      });
+    }
+
+    // B) Sales and Expenses dropdown with fiscal year logic
+    const salesExpensesBtn = document.getElementById("sales-expenses-btn");
+    const salesExpensesDropdown = document.getElementById("sales-expenses-dropdown");
+    const salesExpensesLabel = document.getElementById("sales-expenses-label");
+    const chartXAxis = document.getElementById("chart-x-axis");
+
+    // Month names for display
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    // Function to update chart X-axis labels
+    function updateChartLabels(period) {
+      const today = new Date();
+      const currentMonth = today.getMonth(); // 0-11
+      const currentYear = today.getFullYear();
+
+      let startMonth,
+        startYear,
+        months = [];
+
+      if (period === "thisFiscal") {
+        // This Fiscal Year: April to March
+        // If current month is Jan-Mar, fiscal year started last year
+        // If current month is Apr-Dec, fiscal year started this year
+        if (currentMonth >= 3) {
+          // April (3) to December (11)
+          startYear = currentYear;
+        } else {
+          // January (0) to March (2)
+          startYear = currentYear - 1;
+        }
+        startMonth = 3; // April (0-indexed)
+
+        // Generate 12 months from April startYear to March (startYear+1)
+        for (let i = 0; i < 12; i++) {
+          const month = (startMonth + i) % 12;
+          const year = startYear + Math.floor((startMonth + i) / 12);
+          months.push({ month: monthNames[month], year: year });
+        }
+      } else if (period === "prevFiscal") {
+        // Previous Fiscal Year: One year before current fiscal year
+        if (currentMonth >= 3) {
+          startYear = currentYear - 1;
+        } else {
+          startYear = currentYear - 2;
+        }
+        startMonth = 3; // April
+
+        for (let i = 0; i < 12; i++) {
+          const month = (startMonth + i) % 12;
+          const year = startYear + Math.floor((startMonth + i) / 12);
+          months.push({ month: monthNames[month], year: year });
+        }
+      } else if (period === "last12") {
+        // Last 12 Months: From current month going back 11 months
+        for (let i = 11; i >= 0; i--) {
+          const date = new Date(currentYear, currentMonth - i, 1);
+          months.push({ month: monthNames[date.getMonth()], year: date.getFullYear() });
+        }
+      }
+
+      // Update chart labels
+      if (chartXAxis && months.length === 12) {
+        chartXAxis.innerHTML = months
+          .map((m) => `<div class="text-center">${m.month}<br />${m.year}</div>`)
+          .join("");
+      }
+    }
+
+    if (salesExpensesBtn && salesExpensesDropdown) {
+      salesExpensesBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        salesExpensesDropdown.classList.toggle("hidden");
+      });
+
+      // Handle dropdown option selection
+      const salesExpensesOptions = salesExpensesDropdown.querySelectorAll("a");
+      salesExpensesOptions.forEach((option) => {
+        option.addEventListener("click", function (e) {
+          e.preventDefault();
+          const period = this.getAttribute("data-period");
+          const label = this.textContent;
+
+          salesExpensesLabel.textContent = label;
+          salesExpensesDropdown.classList.add("hidden");
+
+          // Update chart based on selected period
+          updateChartLabels(period);
+        });
+      });
+    }
+
+    // Initialize chart with default period
+    updateChartLabels("thisFiscal");
+
+    // C) Top Expenses dropdown
+    const topExpensesBtn = document.getElementById("top-expenses-btn");
+    const topExpensesDropdown = document.getElementById("top-expenses-dropdown");
+    const topExpensesLabel = document.getElementById("top-expenses-label");
+    const topExpensesText = document.getElementById("top-expenses-text");
+
+    if (topExpensesBtn && topExpensesDropdown) {
+      topExpensesBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        topExpensesDropdown.classList.toggle("hidden");
+      });
+
+      // Handle dropdown option selection
+      const topExpensesOptions = topExpensesDropdown.querySelectorAll("a");
+      topExpensesOptions.forEach((option) => {
+        option.addEventListener("click", function (e) {
+          e.preventDefault();
+          const period = this.getAttribute("data-expense-period");
+
+          topExpensesLabel.textContent = period;
+          topExpensesText.textContent = `No Expense recorded for ${period}`;
+          topExpensesDropdown.classList.add("hidden");
+        });
+      });
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener("click", function (e) {
+      // Close Total Receivables dropdown
+      if (
+        newReceivableBtn &&
+        newReceivableDropdown &&
+        !newReceivableBtn.contains(e.target) &&
+        !newReceivableDropdown.contains(e.target)
+      ) {
+        newReceivableDropdown.classList.add("hidden");
+      }
+
+      // Close Sales and Expenses dropdown
+      if (
+        salesExpensesBtn &&
+        salesExpensesDropdown &&
+        !salesExpensesBtn.contains(e.target) &&
+        !salesExpensesDropdown.contains(e.target)
+      ) {
+        salesExpensesDropdown.classList.add("hidden");
+      }
+
+      // Close Top Expenses dropdown
+      if (
+        topExpensesBtn &&
+        topExpensesDropdown &&
+        !topExpensesBtn.contains(e.target) &&
+        !topExpensesDropdown.contains(e.target)
+      ) {
+        topExpensesDropdown.classList.add("hidden");
+      }
+    });
+  })();
+</script>

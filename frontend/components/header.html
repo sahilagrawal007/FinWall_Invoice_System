@@ -1,0 +1,189 @@
+<header class="h-16 flex items-center justify-between px-6 border-b border-borderColor bg-white shrink-0 z-10">
+  <!-- Left: History -->
+  <div class="flex items-center text-gray-400">
+    <button 
+      title="Recent Activities"
+      class="mr-4 hover:text-gray-600">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+    </button>
+    <!-- Search Bar -->
+    <div class="relative w-96">
+      <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </span>
+      <input
+        class="w-full py-2 pl-10 pr-4 bg-[#f1f5f9] border-transparent rounded-lg text-sm text-gray-700 placeholder-gray-500 focus:bg-white focus:border-activeBlue focus:ring-0 transition-colors"
+        placeholder="Search in Customers ( / )" type="text" />
+    </div>
+  </div>
+
+  <!-- Right: Actions -->
+  <div class="flex items-center space-x-2 text-gray-500">
+    <!-- Organization Dropdown -->
+    <div class="relative">
+      <button class="flex items-center space-x-1 px-2 py-1 hover:bg-gray-100 rounded transition-colors">
+        <span class="text-sm font-medium text-gray-700 org-name-short">D</span>
+        <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+      </button>
+    </div>
+
+    <!-- Divider -->
+    <div class="w-px h-6 bg-gray-200"></div>
+
+    <!-- Plus Button -->
+    <button title="Quick Create"
+      class="w-8 h-8 flex items-center justify-center bg-activeBlue text-white rounded hover:bg-blue-600 transition-colors">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+
+    <!-- Notification -->
+    <button title="Notifications"
+      class="w-8 h-8 flex items-center justify-center hover:text-gray-700 hover:bg-gray-100 rounded transition-colors">
+      <i class="fa-solid fa-bell"></i>
+    </button>
+
+    <!-- Settings -->
+    <button title="Settings"
+      class="w-8 h-8 flex items-center justify-center hover:text-gray-700 hover:bg-gray-100 rounded transition-colors">
+      <i class="fa-solid fa-gear"></i>
+    </button>
+
+    <!-- User Profile Button with Dropdown -->
+    <div class="relative">
+      <button id="user-profile-btn" title="My Profile"
+        class="w-9 h-9 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-300 transition-colors overflow-hidden">
+        <i class="fa-solid fa-user"></i>
+      </button>
+
+      <!-- Profile Dropdown Panel -->
+      <div id="user-profile-panel"
+        class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
+        <!-- User Info Header -->
+        <div class="px-5 py-4 bg-white border-b border-gray-100 flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-800 user-name">User</p>
+              <p class="text-xs text-gray-500 user-email">user@example.com</p>
+            </div>
+          </div>
+          <button id="close-profile-panel" class="text-red-500 hover:text-red-600">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
+
+        <!-- User Details -->
+        <div class="px-5 py-3 border-b border-gray-100">
+          <p class="text-xs text-gray-500">
+            <span class="user-id-info">User ID: --</span> • <span class="org-id-info">Organization ID: --</span>
+          </p>
+        </div>
+
+        <!-- Actions Row -->
+        <div class="px-5 py-3 flex items-center justify-between border-b border-gray-100">
+          <a href="#" class="text-sm text-blue-600 hover:underline font-medium">My Account</a>
+          <button id="logout-btn" class="text-sm text-red-500 hover:text-red-600 font-medium flex items-center gap-1">
+            <i class="fa-solid fa-sign-out-alt"></i> Sign Out
+          </button>
+        </div>
+
+        <!-- Quick Links Grid -->
+        <div class="px-5 py-4 grid grid-cols-3 gap-4 border-b border-gray-100">
+          <a href="#" class="flex flex-col items-center text-center hover:bg-gray-50 p-2 rounded transition-colors">
+            <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mb-2">
+              <i class="fa-solid fa-file-lines text-blue-500"></i>
+            </div>
+            <span class="text-xs text-gray-600">Help Documents</span>
+          </a>
+          <a href="#" class="flex flex-col items-center text-center hover:bg-gray-50 p-2 rounded transition-colors">
+            <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mb-2">
+              <i class="fa-solid fa-comments text-blue-500"></i>
+            </div>
+            <span class="text-xs text-gray-600">FAQs</span>
+          </a>
+          <a href="#" class="flex flex-col items-center text-center hover:bg-gray-50 p-2 rounded transition-colors">
+            <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mb-2">
+              <i class="fa-solid fa-users text-blue-500"></i>
+            </div>
+            <span class="text-xs text-gray-600">Forum</span>
+          </a>
+          <a href="#" class="flex flex-col items-center text-center hover:bg-gray-50 p-2 rounded transition-colors">
+            <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mb-2">
+              <i class="fa-solid fa-play text-blue-500"></i>
+            </div>
+            <span class="text-xs text-gray-600">Video Tutorials</span>
+          </a>
+          <a href="#" class="flex flex-col items-center text-center hover:bg-gray-50 p-2 rounded transition-colors">
+            <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mb-2">
+              <i class="fa-solid fa-compass text-blue-500"></i>
+            </div>
+            <span class="text-xs text-gray-600">Explore Features</span>
+          </a>
+          <a href="#" class="flex flex-col items-center text-center hover:bg-gray-50 p-2 rounded transition-colors">
+            <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mb-2">
+              <i class="fa-solid fa-folder-open text-blue-500"></i>
+            </div>
+            <span class="text-xs text-gray-600">Migration Guide</span>
+          </a>
+        </div>
+
+        <!-- Need Assistance Section -->
+        <div class="px-5 py-4">
+          <h4 class="text-sm font-semibold text-gray-800 mb-3">Need Assistance?</h4>
+          <div class="space-y-2">
+            <a href="#" class="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600">
+              <i class="fa-solid fa-envelope text-gray-400"></i>
+              Send an email <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+            </a>
+            <a href="#" class="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600">
+              <i class="fa-solid fa-circle-play text-gray-400"></i>
+              Record screen & share feedback <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+            </a>
+            <a href="#" class="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600">
+              <i class="fa-solid fa-display text-gray-400"></i>
+              Register for webinars <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Apps Grid Button -->
+    <button
+      class="w-8 h-8 flex items-center justify-center hover:text-gray-700 hover:bg-gray-100 rounded transition-colors">
+      <i class="fa-solid fa-grip"></i>
+    </button>
+  </div>
+</header>
+
+<script>
+  // Profile panel toggle
+  (function () {
+    const profileBtn = document.getElementById('user-profile-btn');
+    const profilePanel = document.getElementById('user-profile-panel');
+    const closeBtn = document.getElementById('close-profile-panel');
+
+    if (profileBtn && profilePanel) {
+      profileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profilePanel.classList.toggle('hidden');
+      });
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          profilePanel.classList.add('hidden');
+        });
+      }
+
+      // Close panel when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!profilePanel.contains(e.target) && !profileBtn.contains(e.target)) {
+          profilePanel.classList.add('hidden');
+        }
+      });
+    }
+  })();
+</script>

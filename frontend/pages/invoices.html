@@ -1,0 +1,414 @@
+<!-- Invoices Page - Zoho Invoice Style -->
+<div id="invoices-page" class="h-full flex flex-col">
+  <!-- Page Header -->
+  <div class="flex justify-between items-center mb-4 pr-12">
+    <div class="flex items-center gap-2">
+      <h1 class="text-xl font-semibold text-gray-800">All Invoices</h1>
+      <button class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-chevron-down text-xs"></i></button>
+    </div>
+    <div class="flex items-center gap-3">
+      <button id="add-invoice-btn"
+        class="flex items-center px-3 py-1 bg-activeBlue hover:bg-blue-600 text-white text-md rounded shadow-sm transition-colors">
+        <i class="fas fa-plus mr-2"></i> New
+      </button>
+      <button class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"><i
+          class="fa-solid fa-ellipsis-vertical"></i></button>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="flex flex-1 border-t border-gray-200 overflow-hidden mr-12">
+    <!-- Invoices List Panel -->
+    <div id="invoices-list-panel" class="w-full flex flex-col bg-white transition-all duration-300">
+      <!-- Table Header -->
+      <div class="border-b border-gray-200 bg-gray-50">
+        <div
+          class="grid grid-cols-[40px_100px_140px_140px_180px_140px_100px_100px_100px_40px] gap-2 px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <div><input type="checkbox" id="select-all-invoices" class="rounded border-gray-300 text-blue-600"></div>
+          <div>Date</div>
+          <div>Invoice#</div>
+          <div>Order Number</div>
+          <div>Customer Name</div>
+          <div>Status</div>
+          <div>Due Date</div>
+          <div class="text-right">Amount</div>
+          <div class="text-right">Balance Due</div>
+          <div></div>
+        </div>
+      </div>
+      <div id="invoices-list" class="flex-1 overflow-y-auto"></div>
+    </div>
+
+    <!-- Invoice Detail Panel -->
+    <div id="invoice-detail-panel"
+      class="hidden flex-1 flex flex-col bg-white overflow-hidden border-l border-gray-200">
+      <!-- Detail Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+        <h2 id="detail-invoice-number" class="text-xl font-semibold text-gray-800">INV-000001</h2>
+        <div class="flex items-center gap-2">
+          <button id="edit-invoice-btn" class="p-2 text-gray-500 hover:bg-gray-100 rounded flex items-center gap-1"><i
+              class="fa-solid fa-pen"></i> Edit</button>
+          <button class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1"><i
+              class="fa-solid fa-paper-plane"></i> Send <i class="fa-solid fa-chevron-down text-xs ml-1"></i></button>
+          <button class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1"><i
+              class="fa-solid fa-bell"></i> Reminders <i class="fa-solid fa-chevron-down text-xs ml-1"></i></button>
+          <button class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1"><i
+              class="fa-solid fa-file-pdf"></i> PDF/Print <i class="fa-solid fa-chevron-down text-xs ml-1"></i></button>
+          <button id="record-payment-btn"
+            class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1"><i
+              class="fa-solid fa-credit-card"></i> Record Payment <i
+              class="fa-solid fa-chevron-down text-xs ml-1"></i></button>
+          <button id="close-detail-btn" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"><i
+              class="fa-solid fa-times text-lg"></i></button>
+        </div>
+      </div>
+
+      <!-- Overdue Alert -->
+      <div id="overdue-alert" class="hidden bg-yellow-50 border-l-4 border-yellow-400 p-4 mx-6 mt-4">
+        <div class="flex items-center">
+          <i class="fa-solid fa-triangle-exclamation text-yellow-600 mr-2"></i>
+          <span class="text-yellow-800 font-medium">WHAT'S NEXT?</span>
+          <span class="text-yellow-700 ml-2">Payment is overdue. Send a payment reminder or record payment.</span>
+          <a href="#" class="text-blue-600 hover:underline ml-2">Learn More</a>
+          <button class="ml-4 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">Record
+            Payment</button>
+        </div>
+      </div>
+
+      <!-- Detail Content -->
+      <div class="flex-1 overflow-y-auto p-6">
+        <!-- Payments Received Section -->
+        <div id="payments-section" class="mb-6">
+          <h3 class="text-sm font-semibold text-blue-600 mb-3 cursor-pointer">Payments Received <span
+              id="payments-count">0</span> <i class="fa-solid fa-chevron-right text-xs ml-1"></i></h3>
+        </div>
+
+        <!-- Invoice Preview -->
+        <div class="flex justify-end mb-4">
+          <button
+            class="px-3 py-1.5 text-sm border border-blue-500 text-blue-600 rounded hover:bg-blue-50 flex items-center gap-1"><i
+              class="fa-solid fa-palette"></i> Customize <i class="fa-solid fa-chevron-down text-xs ml-1"></i></button>
+        </div>
+
+        <div id="invoice-preview" class="bg-white border border-gray-200 shadow-lg max-w-2xl mx-auto p-8 relative">
+          <!-- Status Ribbon -->
+          <div id="status-ribbon" class="hidden absolute -left-1 top-12 transform -rotate-45">
+            <div id="ribbon-text" class="bg-red-500 text-white text-xs px-8 py-1 font-semibold shadow-md">OVERDUE</div>
+          </div>
+
+          <!-- Header -->
+          <div class="flex justify-between items-start mb-8">
+            <div>
+              <div class="text-lg font-bold text-gray-800">D</div>
+              <div class="text-sm text-gray-600 mt-1">
+                <div>JRB1</div>
+                <div>surat Gujarat 395004</div>
+                <div>India</div>
+                <div>Invoicer_Email</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-3xl font-bold text-gray-400">TAX INVOICE</div>
+            </div>
+          </div>
+
+          <!-- Invoice Info -->
+          <div class="flex justify-between mb-8">
+            <div></div>
+            <div class="text-sm">
+              <div class="flex justify-between gap-8 mb-1"><span class="text-gray-500">#</span><span
+                  id="preview-invoice-number" class="text-blue-600">INV-000001</span></div>
+              <div class="flex justify-between gap-8 mb-1"><span class="text-gray-500">Invoice Date</span><span
+                  id="preview-invoice-date">05/02/2026</span></div>
+              <div class="flex justify-between gap-8 mb-1"><span class="text-gray-500">Terms</span><span
+                  id="preview-terms-days">Due on Receipt</span></div>
+              <div class="flex justify-between gap-8"><span class="text-gray-500">Due Date</span><span
+                  id="preview-due-date">05/02/2026</span></div>
+            </div>
+          </div>
+
+          <!-- Bill To -->
+          <div class="mb-6">
+            <div class="text-xs font-semibold text-gray-500 mb-1">Bill To</div>
+            <div id="preview-customer-name" class="text-sm text-blue-600 font-medium">Mr. ABC DEF</div>
+          </div>
+
+          <!-- Items Table -->
+          <table class="w-full text-sm mb-6">
+            <thead>
+              <tr class="border-y border-gray-200 bg-gray-50">
+                <th class="text-left py-2 px-2 text-xs font-semibold text-gray-600">#</th>
+                <th class="text-left py-2 px-2 text-xs font-semibold text-gray-600">Item & Description</th>
+                <th class="text-right py-2 px-2 text-xs font-semibold text-gray-600">Qty</th>
+                <th class="text-right py-2 px-2 text-xs font-semibold text-gray-600">Rate</th>
+                <th class="text-right py-2 px-2 text-xs font-semibold text-gray-600">Amount</th>
+              </tr>
+            </thead>
+            <tbody id="preview-items-tbody"></tbody>
+          </table>
+
+          <!-- Totals -->
+          <div class="flex justify-end mb-6">
+            <div class="w-64">
+              <div class="flex justify-between py-1 text-sm"><span class="text-gray-600">Sub Total</span><span
+                  id="preview-subtotal">₹0.00</span></div>
+              <div class="flex justify-between py-1 text-sm"><span class="text-gray-600">Discount</span><span
+                  id="preview-discount">(-) ₹0.00</span></div>
+              <div class="flex justify-between py-1 text-sm"><span class="text-gray-600">Total</span><span
+                  id="preview-total">₹0.00</span></div>
+              <div class="flex justify-between py-1 text-sm text-red-600"><span>Payment Made</span><span
+                  id="preview-paid">(-) ₹0.00</span></div>
+              <div class="flex justify-between py-2 text-sm font-bold border-t border-gray-300 mt-2"><span>Balance
+                  Due</span><span id="preview-balance">₹0.00</span></div>
+            </div>
+          </div>
+
+          <!-- Total in Words -->
+          <div class="mb-6">
+            <div class="text-xs font-semibold text-gray-700">Total In Words</div>
+            <div id="preview-total-words" class="text-sm text-gray-600 font-medium">Indian Rupee Zero Only</div>
+          </div>
+
+          <!-- Notes & Terms -->
+          <div class="mb-4">
+            <div class="text-xs font-semibold text-gray-700">Notes</div>
+            <div id="preview-notes" class="text-sm text-gray-600">Looking forward for your business.</div>
+          </div>
+          <div class="mb-8">
+            <div class="text-xs font-semibold text-gray-700">Terms & Conditions</div>
+            <div id="preview-terms" class="text-sm text-gray-600">-</div>
+          </div>
+          <div class="text-right">
+            <div class="text-xs text-gray-500">Authorized Signatory</div>
+          </div>
+        </div>
+
+        <div class="text-center text-sm text-gray-500 mt-4">PDF Template : 'Spreadsheet Template' <a href="#"
+            class="text-blue-600 hover:underline">Change</a></div>
+
+        <!-- More Information -->
+        <div class="border-t border-gray-200 mt-6 pt-6">
+          <h3 class="text-base font-semibold text-gray-800 mb-4">More Information</h3>
+          <div class="flex text-sm"><span class="w-40 text-gray-500">Email Recipients</span><span id="detail-email"
+              class="text-gray-800">-</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Record Payment Modal -->
+<div id="payment-modal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black bg-opacity-30" onclick="closePaymentModal()"></div>
+  <div class="absolute right-0 top-0 h-full w-full max-w-lg bg-white shadow-2xl">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+      <h2 class="text-lg font-semibold text-gray-800">Record Payment</h2>
+      <button onclick="closePaymentModal()" class="p-2 text-gray-400 hover:text-gray-600"><i
+          class="fa-solid fa-times text-xl"></i></button>
+    </div>
+    <form id="payment-form" class="p-6">
+      <input type="hidden" id="payment-invoice-id" />
+      <div class="mb-4"><label class="block text-sm text-gray-600 mb-1">Payment Date*</label><input type="date"
+          id="payment-date" required class="w-full px-3 py-2 text-sm border border-gray-300 rounded"></div>
+      <div class="mb-4"><label class="block text-sm text-gray-600 mb-1">Amount*</label><input type="number"
+          id="payment-amount" required step="0.01" min="0.01"
+          class="w-full px-3 py-2 text-sm border border-gray-300 rounded"></div>
+      <div class="mb-4"><label class="block text-sm text-gray-600 mb-1">Payment Mode*</label>
+        <select id="payment-method" required class="w-full px-3 py-2 text-sm border border-gray-300 rounded">
+          <option value="CASH">Cash</option>
+          <option value="BANK_TRANSFER">Bank Transfer</option>
+          <option value="UPI">UPI</option>
+          <option value="CHEQUE">Cheque</option>
+          <option value="CREDIT_CARD">Credit Card</option>
+          <option value="DEBIT_CARD">Debit Card</option>
+        </select>
+      </div>
+      <div class="mb-4"><label class="block text-sm text-gray-600 mb-1">Reference#</label><input type="text"
+          id="payment-reference" class="w-full px-3 py-2 text-sm border border-gray-300 rounded"></div>
+      <div class="mb-4"><label class="block text-sm text-gray-600 mb-1">Notes</label><textarea id="payment-notes"
+          rows="2" class="w-full px-3 py-2 text-sm border border-gray-300 rounded"></textarea></div>
+      <div class="flex gap-3"><button type="submit"
+          class="px-6 py-2 bg-activeBlue text-white rounded hover:bg-blue-600">Record Payment</button><button
+          type="button" onclick="closePaymentModal()"
+          class="px-6 py-2 text-gray-700 hover:bg-gray-100 rounded">Cancel</button></div>
+    </form>
+  </div>
+</div>
+
+<script>
+  (function () {
+    let currentInvoiceId = null, invoicesData = [];
+    init();
+
+    function init() { loadInvoices(); bindEvents(); }
+
+    function bindEvents() {
+      document.getElementById('add-invoice-btn').addEventListener('click', () => showToast('Use Quotes to create invoices', 'info'));
+      document.getElementById('close-detail-btn').addEventListener('click', closeDetailPanel);
+      document.getElementById('record-payment-btn').addEventListener('click', openPaymentModal);
+      document.getElementById('payment-form').addEventListener('submit', submitPayment);
+    }
+
+    async function loadInvoices() {
+      const list = document.getElementById('invoices-list');
+      list.innerHTML = '<div class="flex justify-center py-12"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>';
+      try {
+        const res = await api.get('/invoices/');
+        invoicesData = res.data || [];
+        renderInvoicesList(invoicesData);
+      } catch (e) {
+        list.innerHTML = '<div class="text-center py-8 text-red-500">Failed to load invoices</div>';
+      }
+    }
+
+    function renderInvoicesList(invoices) {
+      const list = document.getElementById('invoices-list');
+      if (!invoices.length) { list.innerHTML = '<div class="text-center py-16 text-gray-400"><i class="fa-solid fa-file-invoice text-5xl mb-4"></i><p>No invoices found</p></div>'; return; }
+
+      list.innerHTML = invoices.map(inv => {
+        const statusInfo = getStatusInfo(inv);
+        return `<div class="invoice-row border-b border-gray-100 hover:bg-blue-50 cursor-pointer ${currentInvoiceId === inv.id ? 'bg-blue-50' : ''}" data-invoice-id="${inv.id}">
+        <div class="grid grid-cols-[40px_100px_140px_140px_180px_140px_100px_100px_100px_40px] gap-2 px-4 py-3 items-center text-sm">
+          <div><input type="checkbox" class="invoice-checkbox rounded border-gray-300 text-blue-600" onclick="event.stopPropagation()"></div>
+          <div class="text-gray-600">${formatDate(inv.invoice_date)}</div>
+          <div class="text-blue-600">${escapeHtml(inv.invoice_number)}</div>
+          <div class="text-gray-500">-</div>
+          <div class="text-gray-800 font-medium">${inv.customer ? escapeHtml(inv.customer.name) : '-'}</div>
+          <div>${statusInfo.badge}</div>
+          <div class="text-gray-600">${formatDate(inv.due_date)}</div>
+          <div class="text-right">₹${formatNum(inv.total)}</div>
+          <div class="text-right">₹${formatNum(inv.balance_due)}</div>
+          <div></div>
+        </div>
+      </div>`;
+      }).join('');
+
+      list.querySelectorAll('.invoice-row').forEach(row => {
+        row.addEventListener('click', () => selectInvoice(row.dataset.invoiceId));
+      });
+    }
+
+    function getStatusInfo(inv) {
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const due = new Date(inv.due_date); due.setHours(0, 0, 0, 0);
+      const diff = Math.ceil((today - due) / (1000 * 60 * 60 * 24));
+
+      if (inv.status === 'PAID') return { badge: '<span class="px-2 py-0.5 text-xs font-medium rounded bg-green-100 text-green-600">PAID</span>', isOverdue: false };
+      if (inv.status === 'VOID') return { badge: '<span class="px-2 py-0.5 text-xs font-medium rounded bg-gray-100 text-gray-600">VOID</span>', isOverdue: false };
+      if (diff > 0 && inv.balance_due > 0) return { badge: `<span class="px-2 py-0.5 text-xs font-medium rounded bg-red-100 text-red-600">OVERDUE BY ${diff} DAY${diff > 1 ? 'S' : ''}</span>`, isOverdue: true, days: diff };
+      if (inv.status === 'PARTIALLY_PAID') return { badge: '<span class="px-2 py-0.5 text-xs font-medium rounded bg-yellow-100 text-yellow-600">PARTIALLY PAID</span>', isOverdue: false };
+      if (inv.status === 'SENT') return { badge: '<span class="px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-600">SENT</span>', isOverdue: false };
+      return { badge: '<span class="px-2 py-0.5 text-xs font-medium rounded bg-gray-100 text-gray-600">DRAFT</span>', isOverdue: false };
+    }
+
+    async function selectInvoice(id) {
+      currentInvoiceId = id;
+      document.querySelectorAll('.invoice-row').forEach(r => r.classList.toggle('bg-blue-50', r.dataset.invoiceId === id));
+
+      const listPanel = document.getElementById('invoices-list-panel');
+      const detailPanel = document.getElementById('invoice-detail-panel');
+      listPanel.classList.remove('w-full'); listPanel.classList.add('w-80');
+      detailPanel.classList.remove('hidden');
+      updateToCompactView();
+
+      try {
+        const inv = await api.get(`/invoices/${id}`);
+        renderInvoiceDetail(inv);
+      } catch (e) { showToast('Failed to load invoice', 'error'); }
+    }
+
+    function updateToCompactView() {
+      const listPanel = document.getElementById('invoices-list-panel');
+      listPanel.querySelector('.border-b.border-gray-200.bg-gray-50').innerHTML = '<div class="px-4 py-3 text-xs font-medium text-gray-500 uppercase">Invoices</div>';
+      invoicesData.forEach(inv => {
+        const row = listPanel.querySelector(`[data-invoice-id="${inv.id}"]`);
+        if (row) {
+          const statusInfo = getStatusInfo(inv);
+          row.innerHTML = `<div class="px-4 py-3 ${currentInvoiceId === inv.id ? 'border-l-4 border-l-blue-600' : ''}">
+          <div class="flex justify-between"><div><div class="font-medium text-gray-800">${inv.customer ? escapeHtml(inv.customer.name) : '-'}</div>
+          <div class="text-xs text-gray-500">${escapeHtml(inv.invoice_number)} · ${formatDate(inv.invoice_date)}</div>
+          <div class="mt-1">${statusInfo.badge}</div></div><div class="text-sm font-medium text-gray-800">₹${formatNum(inv.total)}</div></div></div>`;
+        }
+      });
+    }
+
+    function renderInvoiceDetail(inv) {
+      const statusInfo = getStatusInfo(inv);
+      document.getElementById('detail-invoice-number').textContent = inv.invoice_number;
+
+      // Overdue alert
+      const alert = document.getElementById('overdue-alert');
+      const ribbon = document.getElementById('status-ribbon');
+      if (statusInfo.isOverdue) { alert.classList.remove('hidden'); ribbon.classList.remove('hidden'); document.getElementById('ribbon-text').textContent = 'OVERDUE'; document.getElementById('ribbon-text').className = 'bg-red-500 text-white text-xs px-8 py-1 font-semibold shadow-md'; }
+      else if (inv.status === 'PAID') { alert.classList.add('hidden'); ribbon.classList.remove('hidden'); document.getElementById('ribbon-text').textContent = 'PAID'; document.getElementById('ribbon-text').className = 'bg-green-500 text-white text-xs px-8 py-1 font-semibold shadow-md'; }
+      else { alert.classList.add('hidden'); ribbon.classList.add('hidden'); }
+
+      // Preview
+      document.getElementById('preview-invoice-number').textContent = inv.invoice_number;
+      document.getElementById('preview-invoice-date').textContent = formatDate(inv.invoice_date);
+      document.getElementById('preview-due-date').textContent = formatDate(inv.due_date);
+      document.getElementById('preview-terms-days').textContent = inv.payment_terms_days === 0 ? 'Due on Receipt' : `Net ${inv.payment_terms_days}`;
+      document.getElementById('preview-customer-name').textContent = inv.customer ? inv.customer.name : '-';
+      document.getElementById('preview-subtotal').textContent = `₹${formatNum(inv.subtotal)}`;
+      document.getElementById('preview-total').textContent = `₹${formatNum(inv.total)}`;
+      document.getElementById('preview-paid').textContent = `(-) ₹${formatNum(inv.amount_paid)}`;
+      document.getElementById('preview-balance').textContent = `₹${formatNum(inv.balance_due)}`;
+      document.getElementById('preview-notes').textContent = inv.notes || 'Looking forward for your business.';
+      document.getElementById('preview-terms').textContent = inv.terms_and_conditions || '-';
+      document.getElementById('detail-email').textContent = inv.customer?.email || '-';
+
+      // Items
+      const tbody = document.getElementById('preview-items-tbody');
+      tbody.innerHTML = (inv.items || []).map((item, i) => `<tr class="border-b border-gray-100">
+      <td class="py-2 px-2 text-gray-600">${i + 1}</td><td class="py-2 px-2"><div class="font-medium">${escapeHtml(item.description)}</div></td>
+      <td class="py-2 px-2 text-right">${formatNum(item.quantity)}</td><td class="py-2 px-2 text-right">₹${formatNum(item.rate)}</td><td class="py-2 px-2 text-right">₹${formatNum(item.amount)}</td>
+    </tr>`).join('') || '<tr><td colspan="5" class="py-4 text-center text-gray-400">No items</td></tr>';
+    }
+
+    function closeDetailPanel() {
+      currentInvoiceId = null;
+      document.getElementById('invoices-list-panel').classList.remove('w-80'); document.getElementById('invoices-list-panel').classList.add('w-full');
+      document.getElementById('invoice-detail-panel').classList.add('hidden');
+      renderInvoicesList(invoicesData);
+    }
+
+    function openPaymentModal() {
+      if (!currentInvoiceId) return;
+      document.getElementById('payment-invoice-id').value = currentInvoiceId;
+      document.getElementById('payment-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('payment-modal').classList.remove('hidden');
+    }
+
+    window.closePaymentModal = function () { document.getElementById('payment-modal').classList.add('hidden'); };
+
+    async function submitPayment(e) {
+      e.preventDefault();
+      try {
+        await api.post('/payments/', {
+          invoice_id: document.getElementById('payment-invoice-id').value,
+          payment_date: document.getElementById('payment-date').value,
+          amount: parseFloat(document.getElementById('payment-amount').value),
+          payment_method: document.getElementById('payment-method').value,
+          reference_number: document.getElementById('payment-reference').value || null,
+          notes: document.getElementById('payment-notes').value || null
+        });
+        showToast('Payment recorded', 'success');
+        closePaymentModal();
+        loadInvoices();
+        if (currentInvoiceId) selectInvoice(currentInvoiceId);
+      } catch (e) { showToast(e.message || 'Failed to record payment', 'error'); }
+    }
+
+    function formatDate(d) { if (!d) return '-'; const dt = new Date(d); return dt.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }); }
+    function formatNum(n) { return n == null ? '0.00' : parseFloat(n).toFixed(2); }
+    function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+    function showToast(msg, type = 'info') {
+      const colors = { success: 'bg-green-500', error: 'bg-red-500', info: 'bg-blue-500' };
+      const toast = document.createElement('div');
+      toast.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-[100]`;
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => document.body.removeChild(toast), 300); }, 3000);
+    }
+  })();
+</script>

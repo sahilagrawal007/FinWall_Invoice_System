@@ -1,0 +1,1093 @@
+<!-- Quotes Page - Zoho Invoice Style -->
+<div id="quotes-page" class="h-full flex flex-col">
+    <!-- Page Header -->
+    <div class="flex justify-between items-center mb-4 pr-12">
+        <div class="flex items-center gap-2">
+            <h1 class="text-xl font-semibold text-gray-800">All Quotes</h1>
+            <button class="text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+            </button>
+        </div>
+        <div class="flex items-center gap-3">
+            <button id="add-quote-btn"
+                class="flex items-center px-3 py-1 bg-activeBlue hover:bg-blue-600 text-white text-md rounded shadow-sm transition-colors">
+                <i class="fas fa-plus mr-2"></i> New
+            </button>
+            <button class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex flex-1 border-t border-gray-200 overflow-hidden mr-12">
+        <!-- Quotes List/Table Panel (Full width when no detail selected) -->
+        <div id="quotes-list-panel" class="w-full flex flex-col bg-white transition-all duration-300">
+            <!-- Table Header Row -->
+            <div class="border-b border-gray-200 bg-gray-50">
+                <div
+                    class="grid grid-cols-[40px_120px_160px_160px_200px_120px_120px_40px] gap-2 px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="select-all-quotes"
+                            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    </div>
+                    <div>Date</div>
+                    <div>Quote Number</div>
+                    <div>Reference Number</div>
+                    <div>Customer Name</div>
+                    <div>Status</div>
+                    <div class="text-right">Amount</div>
+                    <div></div>
+                </div>
+            </div>
+
+            <!-- Quotes List -->
+            <div id="quotes-list" class="flex-1 overflow-y-auto">
+                <!-- Quotes will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Quote Detail Panel (Right) - Hidden by default -->
+        <div id="quote-detail-panel"
+            class="hidden flex-1 flex flex-col bg-white overflow-hidden border-l border-gray-200">
+            <!-- Detail Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+                <div class="flex items-center gap-4">
+                    <h2 id="detail-quote-number" class="text-xl font-semibold text-gray-800">QT-000001</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="edit-quote-btn"
+                        class="p-2 text-gray-500 hover:bg-gray-100 rounded flex items-center gap-1" title="Edit">
+                        <i class="fa-solid fa-pen"></i> Edit
+                    </button>
+                    <div class="relative">
+                        <button id="send-quote-btn"
+                            class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1">
+                            <i class="fa-solid fa-paper-plane"></i> Send <i
+                                class="fa-solid fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                    </div>
+                    <button
+                        class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1">
+                        <i class="fa-solid fa-share"></i> Share
+                    </button>
+                    <button
+                        class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1">
+                        <i class="fa-solid fa-file-pdf"></i> PDF/Print <i
+                            class="fa-solid fa-chevron-down text-xs ml-1"></i>
+                    </button>
+                    <button id="convert-to-invoice-btn"
+                        class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1">
+                        <i class="fa-solid fa-file-invoice"></i> Convert to Invoice
+                    </button>
+                    <div class="relative">
+                        <button id="more-actions-btn"
+                            class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </button>
+                        <div id="more-actions-dropdown"
+                            class="hidden absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-50 min-w-40">
+                            <button class="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2">
+                                <i class="fa-solid fa-folder-plus text-gray-400"></i> Create Project
+                            </button>
+                            <button class="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2">
+                                <i class="fa-solid fa-clone text-gray-400"></i> Clone
+                            </button>
+                            <button
+                                class="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-red-600">
+                                <i class="fa-solid fa-trash text-red-400"></i> Delete
+                            </button>
+                            <div class="border-t border-gray-200 my-1"></div>
+                            <button
+                                class="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 bg-green-500 text-white">
+                                <i class="fa-solid fa-cog"></i> Quote Preferences
+                            </button>
+                        </div>
+                    </div>
+                    <button id="bookmark-quote-btn"
+                        class="p-2 text-gray-400 hover:text-yellow-500 hover:bg-gray-100 rounded">
+                        <i class="fa-regular fa-bookmark"></i>
+                    </button>
+                    <button id="close-detail-btn"
+                        class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
+                        <i class="fa-solid fa-times text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detail Content -->
+            <div class="flex-1 overflow-y-auto">
+                <!-- Invoices Section (if converted) -->
+                <div id="invoices-section" class="hidden border-b border-gray-200 p-6 bg-gray-50">
+                    <h3 class="text-sm font-semibold text-gray-700 mb-3">Invoices</h3>
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-xs font-medium text-gray-500 uppercase border-b border-gray-200">
+                                <th class="text-left py-2">Date</th>
+                                <th class="text-left py-2">Invoice#</th>
+                                <th class="text-left py-2">Status</th>
+                                <th class="text-left py-2">Due Date</th>
+                                <th class="text-right py-2">Amount</th>
+                                <th class="text-right py-2">Balance Due</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoices-tbody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Quote Preview -->
+                <div class="p-6">
+                    <div class="flex justify-end mb-4">
+                        <button
+                            class="px-3 py-1.5 text-sm border border-blue-500 text-blue-600 rounded hover:bg-blue-50 flex items-center gap-1">
+                            <i class="fa-solid fa-palette"></i> Customize <i
+                                class="fa-solid fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                    </div>
+
+                    <!-- Quote Document Preview -->
+                    <div id="quote-preview"
+                        class="bg-white border border-gray-200 shadow-lg max-w-2xl mx-auto p-8 relative">
+                        <!-- INVOICED Ribbon (shown when converted) -->
+                        <div id="invoiced-ribbon" class="hidden absolute -left-1 top-12 transform -rotate-45">
+                            <div class="bg-green-500 text-white text-xs px-8 py-1 font-semibold shadow-md">INVOICED
+                            </div>
+                        </div>
+
+                        <!-- Header -->
+                        <div class="flex justify-between items-start mb-8">
+                            <div>
+                                <div class="text-lg font-bold text-gray-800" id="preview-org-name">D</div>
+                                <div class="text-sm text-gray-600 mt-1">
+                                    <div id="preview-org-address">JRB1</div>
+                                    <div id="preview-org-city">Johri Gujarat 393001</div>
+                                    <div id="preview-org-country">India</div>
+                                    <div id="preview-org-email">Invoicer_Email</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-3xl font-bold text-gray-400">QUOTE</div>
+                            </div>
+                        </div>
+
+                        <!-- Quote Info -->
+                        <div class="flex justify-between mb-8">
+                            <div></div>
+                            <div class="text-sm">
+                                <div class="flex justify-between gap-8 mb-1">
+                                    <span class="text-gray-500">#</span>
+                                    <span id="preview-quote-number" class="text-blue-600">QT-000001</span>
+                                </div>
+                                <div class="flex justify-between gap-8 mb-1">
+                                    <span class="text-gray-500">Quote Date</span>
+                                    <span id="preview-quote-date">05/02/2026</span>
+                                </div>
+                                <div class="flex justify-between gap-8">
+                                    <span class="text-gray-500">Expiry Date</span>
+                                    <span id="preview-expiry-date">12/02/2026</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bill To -->
+                        <div class="mb-6">
+                            <div class="text-xs font-semibold text-gray-500 mb-1">Bill To</div>
+                            <div id="preview-customer-name" class="text-sm text-blue-600 font-medium">Mr. ABC DEF</div>
+                        </div>
+
+                        <!-- Items Table -->
+                        <table class="w-full text-sm mb-6">
+                            <thead>
+                                <tr class="border-y border-gray-200 bg-gray-50">
+                                    <th class="text-left py-2 px-2 text-xs font-semibold text-gray-600">#</th>
+                                    <th class="text-left py-2 px-2 text-xs font-semibold text-gray-600">Item &
+                                        Description</th>
+                                    <th class="text-right py-2 px-2 text-xs font-semibold text-gray-600">Qty</th>
+                                    <th class="text-right py-2 px-2 text-xs font-semibold text-gray-600">Rate</th>
+                                    <th class="text-right py-2 px-2 text-xs font-semibold text-gray-600">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="preview-items-tbody">
+                                <!-- Items will be populated here -->
+                            </tbody>
+                        </table>
+
+                        <!-- Totals -->
+                        <div class="flex justify-end mb-6">
+                            <div class="w-64">
+                                <div class="flex justify-between py-1 text-sm">
+                                    <span class="text-gray-600">Sub Total</span>
+                                    <span id="preview-subtotal">₹150.00</span>
+                                </div>
+                                <div class="flex justify-between py-1 text-sm">
+                                    <span class="text-gray-600">Discount (0.00%)</span>
+                                    <span id="preview-discount">(-) ₹15.00</span>
+                                </div>
+                                <div class="flex justify-between py-2 text-sm font-bold border-t border-gray-300 mt-2">
+                                    <span>Total</span>
+                                    <span id="preview-total">₹135.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total in Words -->
+                        <div class="mb-6">
+                            <div class="text-xs font-semibold text-gray-700">Total In Words</div>
+                            <div id="preview-total-words" class="text-sm text-gray-600 font-medium">Indian Rupee One
+                                Hundred Thirty-Five Only</div>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="mb-4">
+                            <div class="text-xs font-semibold text-gray-700">Notes</div>
+                            <div id="preview-notes" class="text-sm text-gray-600">Looking forward for your business.
+                            </div>
+                        </div>
+
+                        <!-- Terms & Conditions -->
+                        <div class="mb-8">
+                            <div class="text-xs font-semibold text-gray-700">Terms & Conditions</div>
+                            <div id="preview-terms" class="text-sm text-gray-600">Price might change due quote</div>
+                        </div>
+
+                        <!-- Authorized Signatory -->
+                        <div class="text-right">
+                            <div class="text-xs text-gray-500">Authorized Signatory</div>
+                        </div>
+                    </div>
+
+                    <div class="text-center text-sm text-gray-500 mt-4">
+                        PDF Template : 'Spreadsheet Template' <a href="#"
+                            class="text-blue-600 hover:underline">Change</a>
+                    </div>
+                </div>
+
+                <!-- More Information Section -->
+                <div class="border-t border-gray-200 p-6">
+                    <h3 class="text-base font-semibold text-gray-800 mb-4">More Information</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex">
+                            <span class="w-40 text-gray-500">Salesperson</span>
+                            <span id="detail-salesperson" class="text-gray-800">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Recipients Section -->
+                <div class="border-t border-gray-200 p-6">
+                    <h3 class="text-base font-semibold text-gray-800 mb-4">Email Recipients</h3>
+                    <div id="email-recipients-list" class="space-y-2">
+                        <!-- Recipients will be listed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create/Edit Quote Slide Panel -->
+<div id="quote-slide-panel" class="fixed inset-0 z-50 hidden">
+    <!-- Backdrop -->
+    <div id="slide-panel-backdrop" class="absolute inset-0 bg-black bg-opacity-30 transition-opacity"></div>
+
+    <!-- Panel -->
+    <div id="slide-panel-content"
+        class="absolute right-0 top-0 h-full w-full max-w-4xl bg-white shadow-2xl transform translate-x-full transition-transform duration-300">
+        <!-- Panel Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <h2 id="panel-title" class="text-lg font-semibold text-gray-800">New Quote</h2>
+            <button id="close-panel-btn" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Panel Body -->
+        <div class="overflow-y-auto h-[calc(100%-130px)]">
+            <form id="quote-form" class="p-6">
+                <input type="hidden" id="quote-id" />
+
+                <!-- Customer Selection -->
+                <div class="grid grid-cols-[140px_1fr] gap-4 mb-5 items-center">
+                    <label class="text-sm text-red-500 font-medium">Customer Name*</label>
+                    <select id="quote_customer" required
+                        class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 max-w-md">
+                        <option value="">Select a customer</option>
+                    </select>
+                </div>
+
+                <!-- Quote Number (Auto-generated) -->
+                <div class="grid grid-cols-[140px_1fr] gap-4 mb-5 items-center">
+                    <label class="text-sm text-gray-600">Quote#</label>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="quote_number" readonly
+                            class="px-3 py-2 text-sm border border-gray-300 rounded bg-gray-50 max-w-xs"
+                            placeholder="Auto-generated" />
+                        <button type="button" class="p-2 text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-cog"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reference Number -->
+                <div class="grid grid-cols-[140px_1fr] gap-4 mb-5 items-center">
+                    <label class="text-sm text-gray-600">Reference#</label>
+                    <input type="text" id="quote_reference"
+                        class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 max-w-md" />
+                </div>
+
+                <!-- Quote Date & Expiry Date -->
+                <div class="grid grid-cols-[140px_1fr_140px_1fr] gap-4 mb-5 items-center">
+                    <label class="text-sm text-red-500 font-medium">Quote Date*</label>
+                    <input type="date" id="quote_date" required
+                        class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                    <label class="text-sm text-red-500 font-medium">Expiry Date*</label>
+                    <input type="date" id="quote_expiry_date" required
+                        class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <!-- Salesperson -->
+                <div class="grid grid-cols-[140px_1fr] gap-4 mb-5 items-center">
+                    <label class="text-sm text-gray-600">Salesperson</label>
+                    <select id="quote_salesperson"
+                        class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 max-w-md">
+                        <option value="">Select or Add Salesperson</option>
+                    </select>
+                </div>
+
+                <!-- Line Items Section -->
+                <div class="border-t border-gray-200 pt-6 mb-6">
+                    <h3 class="text-base font-semibold text-gray-800 mb-4">Item Table</h3>
+
+                    <table class="w-full text-sm border border-gray-200 rounded">
+                        <thead class="bg-gray-50">
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 px-3 text-xs font-medium text-gray-500 uppercase w-8"></th>
+                                <th class="text-left py-3 px-3 text-xs font-medium text-gray-500 uppercase">Item Details
+                                </th>
+                                <th class="text-right py-3 px-3 text-xs font-medium text-gray-500 uppercase w-24">
+                                    Quantity</th>
+                                <th class="text-right py-3 px-3 text-xs font-medium text-gray-500 uppercase w-32">Rate
+                                </th>
+                                <th class="text-right py-3 px-3 text-xs font-medium text-gray-500 uppercase w-28">Tax
+                                </th>
+                                <th class="text-right py-3 px-3 text-xs font-medium text-gray-500 uppercase w-32">Amount
+                                </th>
+                                <th class="w-8"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="line-items-tbody">
+                            <!-- Line items will be added here -->
+                        </tbody>
+                    </table>
+
+                    <button type="button" id="add-line-item-btn"
+                        class="mt-3 text-blue-600 hover:text-blue-700 text-sm flex items-center gap-1">
+                        <i class="fa-solid fa-plus"></i> Add another line
+                    </button>
+                </div>
+
+                <!-- Totals Section -->
+                <div class="flex justify-end mb-6">
+                    <div class="w-80 bg-gray-50 p-4 rounded">
+                        <div class="flex justify-between py-2 text-sm">
+                            <span class="text-gray-600">Sub Total</span>
+                            <span id="form-subtotal" class="font-medium">₹0.00</span>
+                        </div>
+                        <div class="flex justify-between py-2 text-sm border-t border-gray-200">
+                            <span class="font-semibold">Total</span>
+                            <span id="form-total" class="font-bold">₹0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="grid grid-cols-[140px_1fr] gap-4 mb-5 items-start">
+                    <label class="text-sm text-gray-600">Customer Notes</label>
+                    <textarea id="quote_notes" rows="3"
+                        class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                        placeholder="Will be displayed on the quote"></textarea>
+                </div>
+
+                <!-- Terms & Conditions -->
+                <div class="grid grid-cols-[140px_1fr] gap-4 mb-5 items-start">
+                    <label class="text-sm text-gray-600">Terms & Conditions</label>
+                    <textarea id="quote_terms" rows="3"
+                        class="px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter the terms and conditions of your business"></textarea>
+                </div>
+            </form>
+        </div>
+
+        <!-- Panel Footer -->
+        <div
+            class="absolute bottom-0 left-0 right-0 flex items-center gap-3 px-6 py-4 border-t border-gray-200 bg-white">
+            <button type="button" id="save-draft-btn"
+                class="px-6 py-2 bg-activeBlue text-white rounded hover:bg-blue-600 font-medium">
+                Save as Draft
+            </button>
+            <button type="button" id="save-send-btn"
+                class="px-6 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 font-medium">
+                Save and Send
+            </button>
+            <button type="button" id="cancel-btn" class="px-6 py-2 text-gray-700 hover:bg-gray-100 rounded font-medium">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Quotes Page JavaScript
+    (function () {
+        let currentQuoteId = null;
+        let editingQuoteId = null;
+        let quotesData = [];
+        let customersData = [];
+        let itemsData = [];
+        let lineItemCount = 0;
+
+        // Initialize
+        init();
+
+        function init() {
+            loadQuotes();
+            loadCustomers();
+            loadItems();
+            bindEvents();
+            setDefaultDates();
+        }
+
+        // Set default dates
+        function setDefaultDates() {
+            const today = new Date();
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + 7);
+
+            document.getElementById('quote_date').value = formatDateForInput(today);
+            document.getElementById('quote_expiry_date').value = formatDateForInput(expiryDate);
+        }
+
+        // Format date for input field
+        function formatDateForInput(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        // Event Bindings
+        function bindEvents() {
+            // Add Quote Button
+            document.getElementById('add-quote-btn').addEventListener('click', openAddPanel);
+
+            // Close Panel
+            document.getElementById('close-panel-btn').addEventListener('click', closePanel);
+            document.getElementById('cancel-btn').addEventListener('click', closePanel);
+            document.getElementById('slide-panel-backdrop').addEventListener('click', closePanel);
+
+            // Save Buttons
+            document.getElementById('save-draft-btn').addEventListener('click', () => saveQuote('draft'));
+            document.getElementById('save-send-btn').addEventListener('click', () => saveQuote('send'));
+
+            // Close Detail Panel
+            document.getElementById('close-detail-btn').addEventListener('click', closeDetailPanel);
+
+            // Edit Quote
+            document.getElementById('edit-quote-btn').addEventListener('click', function () {
+                if (currentQuoteId) {
+                    openEditPanel(currentQuoteId);
+                }
+            });
+
+            // Add Line Item
+            document.getElementById('add-line-item-btn').addEventListener('click', addLineItem);
+
+            // More Actions Dropdown
+            document.getElementById('more-actions-btn').addEventListener('click', function (e) {
+                e.stopPropagation();
+                document.getElementById('more-actions-dropdown').classList.toggle('hidden');
+            });
+
+            // Convert to Invoice
+            document.getElementById('convert-to-invoice-btn').addEventListener('click', convertToInvoice);
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function () {
+                document.getElementById('more-actions-dropdown').classList.add('hidden');
+            });
+
+            // Select All Checkbox
+            document.getElementById('select-all-quotes').addEventListener('change', function () {
+                const isChecked = this.checked;
+                document.querySelectorAll('.quote-checkbox').forEach(cb => cb.checked = isChecked);
+            });
+        }
+
+        // Load Quotes
+        async function loadQuotes() {
+            const listContainer = document.getElementById('quotes-list');
+            listContainer.innerHTML = `
+        <div class="flex justify-center items-center py-12">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      `;
+
+            try {
+                const response = await api.get('/quotes/');
+                quotesData = response.data || [];
+                renderQuotesList(quotesData);
+            } catch (error) {
+                console.error('Error loading quotes:', error);
+                listContainer.innerHTML = `
+          <div class="text-center py-8 text-red-500">
+            <i class="fa-solid fa-exclamation-circle text-2xl mb-2"></i>
+            <p>Failed to load quotes</p>
+            <button onclick="location.reload()" class="text-blue-600 hover:underline mt-2">Retry</button>
+          </div>
+        `;
+            }
+        }
+
+        // Load Customers for dropdown
+        async function loadCustomers() {
+            try {
+                const response = await api.get('/customers/');
+                customersData = response.data || [];
+                populateCustomerDropdown();
+            } catch (error) {
+                console.error('Error loading customers:', error);
+            }
+        }
+
+        // Load Items for line items
+        async function loadItems() {
+            try {
+                const response = await api.get('/items/');
+                itemsData = response.data || [];
+            } catch (error) {
+                console.error('Error loading items:', error);
+            }
+        }
+
+        // Populate Customer Dropdown
+        function populateCustomerDropdown() {
+            const select = document.getElementById('quote_customer');
+            select.innerHTML = '<option value="">Select a customer</option>' +
+                customersData.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+        }
+
+        // Render Quotes List (Table format)
+        function renderQuotesList(quotes) {
+            const listContainer = document.getElementById('quotes-list');
+
+            if (!quotes || quotes.length === 0) {
+                listContainer.innerHTML = `
+          <div class="text-center py-16 text-gray-400">
+            <i class="fa-solid fa-file-lines text-5xl mb-4"></i>
+            <p class="text-lg">No quotes found</p>
+            <p class="text-sm mt-1">Click "New" to create a quote</p>
+          </div>
+        `;
+                return;
+            }
+
+            const html = quotes.map(quote => `
+        <div class="quote-row border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-colors ${currentQuoteId === quote.id ? 'bg-blue-50' : ''}"
+             data-quote-id="${quote.id}">
+          <div class="grid grid-cols-[40px_120px_160px_160px_200px_120px_120px_40px] gap-2 px-4 py-3 items-center text-sm">
+            <div class="flex items-center">
+              <input type="checkbox" class="quote-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500" onclick="event.stopPropagation()">
+            </div>
+            <div class="text-gray-600">${formatDate(quote.quote_date)}</div>
+            <div class="text-blue-600 hover:underline flex items-center gap-1">
+              ${escapeHtml(quote.quote_number)}
+              <i class="fa-regular fa-envelope text-gray-400 text-xs"></i>
+            </div>
+            <div class="text-gray-500">-</div>
+            <div class="text-gray-800 font-medium">${quote.customer ? escapeHtml(quote.customer.name) : '-'}</div>
+            <div>${getStatusBadge(quote.status)}</div>
+            <div class="text-right text-gray-800">₹${formatNumber(quote.total)}</div>
+            <div class="text-center">
+              <button class="text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-search text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+            listContainer.innerHTML = html;
+
+            // Add click handlers
+            listContainer.querySelectorAll('.quote-row').forEach(row => {
+                row.addEventListener('click', function () {
+                    const quoteId = this.dataset.quoteId;
+                    selectQuote(quoteId);
+                });
+            });
+        }
+
+        // Get Status Badge
+        function getStatusBadge(status) {
+            const statusColors = {
+                'DRAFT': 'bg-gray-100 text-gray-600',
+                'SENT': 'bg-blue-100 text-blue-600',
+                'VIEWED': 'bg-purple-100 text-purple-600',
+                'ACCEPTED': 'bg-green-100 text-green-600',
+                'REJECTED': 'bg-red-100 text-red-600',
+                'CONVERTED': 'bg-teal-100 text-teal-600',
+                'INVOICED': 'bg-green-500 text-white'
+            };
+            const colorClass = statusColors[status] || 'bg-gray-100 text-gray-600';
+            return `<span class="px-2 py-0.5 text-xs font-medium rounded ${colorClass}">${status}</span>`;
+        }
+
+        // Format Date
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        // Format Number
+        function formatNumber(num) {
+            if (num === null || num === undefined) return '0.00';
+            return parseFloat(num).toFixed(2);
+        }
+
+        // Select Quote and show detail panel
+        async function selectQuote(quoteId) {
+            currentQuoteId = quoteId;
+
+            // Update list selection styling
+            document.querySelectorAll('.quote-row').forEach(row => {
+                row.classList.toggle('bg-blue-50', row.dataset.quoteId === quoteId);
+            });
+
+            // Show detail panel and resize list panel
+            const listPanel = document.getElementById('quotes-list-panel');
+            const detailPanel = document.getElementById('quote-detail-panel');
+
+            listPanel.classList.remove('w-full');
+            listPanel.classList.add('w-80');
+            detailPanel.classList.remove('hidden');
+
+            // Update list panel to compact view
+            updateListPanelToCompact();
+
+            // Load quote details
+            try {
+                const quote = await api.get(`/quotes/${quoteId}`);
+                renderQuoteDetail(quote);
+            } catch (error) {
+                console.error('Error loading quote details:', error);
+                showToast('Failed to load quote details', 'error');
+            }
+        }
+
+        // Update list panel to compact view (showing only essential info)
+        function updateListPanelToCompact() {
+            const listPanel = document.getElementById('quotes-list-panel');
+
+            // Re-render as compact list
+            const headerEl = listPanel.querySelector('.border-b.border-gray-200.bg-gray-50');
+            if (headerEl) {
+                headerEl.innerHTML = `
+          <div class="px-4 py-3 text-xs font-medium text-gray-500 uppercase">Quotes</div>
+        `;
+            }
+
+            // Update quote rows to compact format
+            quotesData.forEach(quote => {
+                const row = listPanel.querySelector(`[data-quote-id="${quote.id}"]`);
+                if (row) {
+                    row.innerHTML = `
+            <div class="px-4 py-3 ${currentQuoteId === quote.id ? 'border-l-4 border-l-blue-600' : ''}">
+              <div class="flex justify-between items-start">
+                <div>
+                  <div class="font-medium text-gray-800">${quote.customer ? escapeHtml(quote.customer.name) : '-'}</div>
+                  <div class="text-xs text-gray-500">${escapeHtml(quote.quote_number)} · ${formatDate(quote.quote_date)}</div>
+                  <div class="mt-1">${getStatusBadge(quote.status)}</div>
+                </div>
+                <div class="text-sm font-medium text-gray-800">₹${formatNumber(quote.total)}</div>
+              </div>
+            </div>
+          `;
+                }
+            });
+        }
+
+        // Render Quote Detail
+        function renderQuoteDetail(quote) {
+            // Header
+            document.getElementById('detail-quote-number').textContent = quote.quote_number;
+
+            // Show invoices section if converted
+            const invoicesSection = document.getElementById('invoices-section');
+            const invoicedRibbon = document.getElementById('invoiced-ribbon');
+            if (quote.converted_invoice_id) {
+                invoicesSection.classList.remove('hidden');
+                invoicedRibbon.classList.remove('hidden');
+                // Would need to fetch invoice details here
+            } else {
+                invoicesSection.classList.add('hidden');
+                invoicedRibbon.classList.add('hidden');
+            }
+
+            // Quote Preview
+            document.getElementById('preview-quote-number').textContent = quote.quote_number;
+            document.getElementById('preview-quote-date').textContent = formatDate(quote.quote_date);
+            document.getElementById('preview-expiry-date').textContent = formatDate(quote.expiry_date);
+            document.getElementById('preview-customer-name').textContent = quote.customer ? quote.customer.name : '-';
+            document.getElementById('preview-notes').textContent = quote.notes || 'Looking forward for your business.';
+            document.getElementById('preview-terms').textContent = quote.terms_and_conditions || '-';
+
+            // Items
+            const itemsTbody = document.getElementById('preview-items-tbody');
+            if (quote.items && quote.items.length > 0) {
+                itemsTbody.innerHTML = quote.items.map((item, index) => `
+          <tr class="border-b border-gray-100">
+            <td class="py-2 px-2 text-gray-600">${index + 1}</td>
+            <td class="py-2 px-2">
+              <div class="font-medium">${escapeHtml(item.description)}</div>
+            </td>
+            <td class="py-2 px-2 text-right">${formatNumber(item.quantity)}</td>
+            <td class="py-2 px-2 text-right">₹${formatNumber(item.rate)}</td>
+            <td class="py-2 px-2 text-right">₹${formatNumber(item.amount)}</td>
+          </tr>
+        `).join('');
+            } else {
+                itemsTbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-400">No items</td></tr>';
+            }
+
+            // Totals
+            document.getElementById('preview-subtotal').textContent = `₹${formatNumber(quote.subtotal)}`;
+            document.getElementById('preview-total').textContent = `₹${formatNumber(quote.total)}`;
+
+            // Total in words (simplified)
+            document.getElementById('preview-total-words').textContent = `Indian Rupee ${numberToWords(quote.total)} Only`;
+
+            // Email recipients
+            const emailList = document.getElementById('email-recipients-list');
+            if (quote.customer && quote.customer.email) {
+                emailList.innerHTML = `
+          <div class="flex items-center gap-2 text-sm">
+            <i class="fa-solid fa-times text-red-500"></i>
+            <span>${escapeHtml(quote.customer.email)}</span>
+          </div>
+        `;
+            } else {
+                emailList.innerHTML = '<div class="text-sm text-gray-400">No recipients</div>';
+            }
+        }
+
+        // Number to words (simplified)
+        function numberToWords(num) {
+            const val = Math.floor(parseFloat(num));
+            if (val === 0) return 'Zero';
+            // Simplified - in production would need full implementation
+            return val.toLocaleString('en-IN');
+        }
+
+        // Close Detail Panel
+        function closeDetailPanel() {
+            currentQuoteId = null;
+
+            const listPanel = document.getElementById('quotes-list-panel');
+            const detailPanel = document.getElementById('quote-detail-panel');
+
+            listPanel.classList.remove('w-80');
+            listPanel.classList.add('w-full');
+            detailPanel.classList.add('hidden');
+
+            // Re-render full list
+            renderQuotesList(quotesData);
+        }
+
+        // Open Add Panel
+        function openAddPanel() {
+            editingQuoteId = null;
+            document.getElementById('panel-title').textContent = 'New Quote';
+            document.getElementById('quote-form').reset();
+            document.getElementById('quote-id').value = '';
+            setDefaultDates();
+
+            // Clear line items and add one empty row
+            document.getElementById('line-items-tbody').innerHTML = '';
+            lineItemCount = 0;
+            addLineItem();
+
+            updateTotals();
+            openPanel();
+        }
+
+        // Add Line Item Row
+        function addLineItem() {
+            lineItemCount++;
+            const tbody = document.getElementById('line-items-tbody');
+
+            const row = document.createElement('tr');
+            row.className = 'line-item-row border-b border-gray-100';
+            row.dataset.lineIndex = lineItemCount;
+
+            row.innerHTML = `
+        <td class="py-2 px-3 text-gray-400 text-center">${lineItemCount}</td>
+        <td class="py-2 px-3">
+          <select class="item-select w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
+            <option value="">Type or click to select an item</option>
+            ${itemsData.map(i => `<option value="${i.id}" data-rate="${i.rate}">${escapeHtml(i.name)}</option>`).join('')}
+          </select>
+          <input type="text" class="item-description w-full px-2 py-1 mt-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500" placeholder="Description">
+        </td>
+        <td class="py-2 px-3">
+          <input type="number" class="item-qty w-full px-2 py-1 text-sm border border-gray-300 rounded text-right focus:ring-2 focus:ring-blue-500" value="1" min="0.01" step="0.01">
+        </td>
+        <td class="py-2 px-3">
+          <input type="number" class="item-rate w-full px-2 py-1 text-sm border border-gray-300 rounded text-right focus:ring-2 focus:ring-blue-500" value="0.00" min="0" step="0.01">
+        </td>
+        <td class="py-2 px-3">
+          <select class="item-tax w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
+            <option value="">No Tax</option>
+            <option value="18">GST 18%</option>
+            <option value="12">GST 12%</option>
+            <option value="5">GST 5%</option>
+          </select>
+        </td>
+        <td class="py-2 px-3">
+          <input type="text" class="item-amount w-full px-2 py-1 text-sm border border-gray-300 rounded text-right bg-gray-50" value="0.00" readonly>
+        </td>
+        <td class="py-2 px-3 text-center">
+          <button type="button" class="remove-line-btn text-red-500 hover:text-red-700" onclick="this.closest('tr').remove(); updateTotals();">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </td>
+      `;
+
+            tbody.appendChild(row);
+
+            // Bind events for this row
+            const itemSelect = row.querySelector('.item-select');
+            const qtyInput = row.querySelector('.item-qty');
+            const rateInput = row.querySelector('.item-rate');
+
+            itemSelect.addEventListener('change', function () {
+                const option = this.selectedOptions[0];
+                if (option && option.dataset.rate) {
+                    rateInput.value = parseFloat(option.dataset.rate).toFixed(2);
+                    calculateLineAmount(row);
+                }
+            });
+
+            qtyInput.addEventListener('input', () => calculateLineAmount(row));
+            rateInput.addEventListener('input', () => calculateLineAmount(row));
+        }
+
+        // Calculate Line Amount
+        function calculateLineAmount(row) {
+            const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+            const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
+            const amount = qty * rate;
+            row.querySelector('.item-amount').value = amount.toFixed(2);
+            updateTotals();
+        }
+
+        // Update Totals
+        window.updateTotals = function () {
+            let subtotal = 0;
+            document.querySelectorAll('.line-item-row').forEach(row => {
+                subtotal += parseFloat(row.querySelector('.item-amount').value) || 0;
+            });
+
+            document.getElementById('form-subtotal').textContent = `₹${subtotal.toFixed(2)}`;
+            document.getElementById('form-total').textContent = `₹${subtotal.toFixed(2)}`;
+        };
+
+        // Open Edit Panel
+        async function openEditPanel(quoteId) {
+            try {
+                editingQuoteId = quoteId;
+                document.getElementById('panel-title').textContent = 'Edit Quote';
+
+                const quote = await api.get(`/quotes/${quoteId}`);
+                populateForm(quote);
+                openPanel();
+            } catch (error) {
+                console.error('Error loading quote for edit:', error);
+                showToast('Failed to load quote', 'error');
+            }
+        }
+
+        // Populate Form
+        function populateForm(quote) {
+            document.getElementById('quote-id').value = quote.id;
+            document.getElementById('quote_customer').value = quote.customer_id;
+            document.getElementById('quote_number').value = quote.quote_number;
+            document.getElementById('quote_date').value = quote.quote_date;
+            document.getElementById('quote_expiry_date').value = quote.expiry_date;
+            document.getElementById('quote_notes').value = quote.notes || '';
+            document.getElementById('quote_terms').value = quote.terms_and_conditions || '';
+
+            // Populate line items
+            document.getElementById('line-items-tbody').innerHTML = '';
+            lineItemCount = 0;
+
+            if (quote.items && quote.items.length > 0) {
+                quote.items.forEach(item => {
+                    addLineItem();
+                    const row = document.querySelector('.line-item-row:last-child');
+                    if (item.item_id) {
+                        row.querySelector('.item-select').value = item.item_id;
+                    }
+                    row.querySelector('.item-description').value = item.description || '';
+                    row.querySelector('.item-qty').value = item.quantity;
+                    row.querySelector('.item-rate').value = item.rate;
+                    row.querySelector('.item-amount').value = item.amount;
+                });
+            } else {
+                addLineItem();
+            }
+
+            updateTotals();
+        }
+
+        // Open Panel
+        function openPanel() {
+            const panel = document.getElementById('quote-slide-panel');
+            const content = document.getElementById('slide-panel-content');
+
+            panel.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('translate-x-full');
+            }, 10);
+        }
+
+        // Close Panel
+        function closePanel() {
+            const panel = document.getElementById('quote-slide-panel');
+            const content = document.getElementById('slide-panel-content');
+
+            content.classList.add('translate-x-full');
+            setTimeout(() => {
+                panel.classList.add('hidden');
+            }, 300);
+
+            editingQuoteId = null;
+        }
+
+        // Save Quote
+        async function saveQuote(action) {
+            const saveBtn = document.getElementById('save-draft-btn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+
+            try {
+                // Collect line items
+                const items = [];
+                document.querySelectorAll('.line-item-row').forEach(row => {
+                    const itemId = row.querySelector('.item-select').value;
+                    const description = row.querySelector('.item-description').value ||
+                        (itemId ? row.querySelector('.item-select').selectedOptions[0].text : 'Item');
+                    const quantity = parseFloat(row.querySelector('.item-qty').value) || 1;
+                    const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
+
+                    if (description && rate > 0) {
+                        items.push({
+                            item_id: itemId || null,
+                            description: description,
+                            quantity: quantity,
+                            rate: rate,
+                            tax_id: null
+                        });
+                    }
+                });
+
+                if (items.length === 0) {
+                    showToast('Please add at least one item', 'error');
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Save as Draft';
+                    return;
+                }
+
+                const quoteData = {
+                    customer_id: document.getElementById('quote_customer').value,
+                    quote_date: document.getElementById('quote_date').value,
+                    expiry_date: document.getElementById('quote_expiry_date').value,
+                    notes: document.getElementById('quote_notes').value || null,
+                    terms_and_conditions: document.getElementById('quote_terms').value || null,
+                    items: items
+                };
+
+                let quote;
+                if (editingQuoteId) {
+                    quote = await api.patch(`/quotes/${editingQuoteId}`, quoteData);
+                    showToast('Quote updated successfully', 'success');
+                } else {
+                    quote = await api.post('/quotes/', quoteData);
+                    showToast('Quote created successfully', 'success');
+
+                    if (action === 'send') {
+                        await api.post(`/quotes/${quote.id}/send`);
+                        showToast('Quote sent successfully', 'success');
+                    }
+                }
+
+                closePanel();
+                loadQuotes();
+            } catch (error) {
+                console.error('Error saving quote:', error);
+                showToast(error.message || 'Failed to save quote', 'error');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save as Draft';
+            }
+        }
+
+        // Convert to Invoice
+        async function convertToInvoice() {
+            if (!currentQuoteId) return;
+
+            if (!confirm('Are you sure you want to convert this quote to an invoice?')) {
+                return;
+            }
+
+            try {
+                await api.post(`/quotes/${currentQuoteId}/convert`);
+                showToast('Quote converted to invoice successfully', 'success');
+                loadQuotes();
+                selectQuote(currentQuoteId);
+            } catch (error) {
+                console.error('Error converting quote:', error);
+                showToast(error.message || 'Failed to convert quote', 'error');
+            }
+        }
+
+        // Show Toast
+        function showToast(message, type = 'info') {
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-blue-500'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-[100] transition-opacity duration-300`;
+            toast.textContent = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    })();
+</script>

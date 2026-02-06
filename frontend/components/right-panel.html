@@ -1,0 +1,80 @@
+<!-- Right Sidebar Panel -->
+<div id="right-sidebar"
+  class="fixed right-0 top-16 bottom-0 w-12 bg-white border-l border-borderColor flex flex-col text-gray-400 z-10 transition-all duration-300">
+
+  <!-- Panel Content -->
+  <div class="right-panel-content flex-1 flex flex-col items-center py-4 space-y-6 overflow-y-auto">
+    <button title="Instant Helper"
+      class="bg-orange-100 p-2 rounded-lg text-orange-500 hover:bg-orange-200 transition-colors">
+      <i class="fa-solid fa-lightbulb"></i>
+    </button>
+    <button title="Announcements" class="hover:text-blue-500 transition-colors">
+      <i class="fa-solid fa-bullhorn"></i>
+    </button>
+    <button title="Webinars" class="hover:text-blue-500 transition-colors">
+      <i class="fa-solid fa-display"></i>
+    </button>
+    <button title="Notebook" class="hover:text-blue-500 transition-colors">
+      <i class="fa-solid fa-book"></i>
+    </button>
+    <button title="All Sidebar Widgets" class="hover:text-blue-500 transition-colors">
+      <i class="fa-solid fa-grip-vertical"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Toggle Button - Fixed outside the sidebar so it's always visible -->
+<button id="collapse-right-sidebar-toggle"
+  class="fixed right-0 bottom-4 w-12 flex items-center justify-center px-3 py-2 text-sm font-normal text-gray-400 hover:text-gray-700 bg-white border-t border-l border-b border-gray-200 hover:bg-gray-100 transition-colors z-20 rounded-l-md shadow-sm"
+  title="Toggle right panel">
+  <i class="fa-solid fa-chevron-right" id="right-sidebar-toggle-icon"></i>
+</button>
+
+<script>
+  // Right sidebar collapse functionality
+  (function () {
+    const sidebar = document.getElementById('right-sidebar');
+    const toggleBtn = document.getElementById('collapse-right-sidebar-toggle');
+    const icon = document.getElementById('right-sidebar-toggle-icon');
+    const content = sidebar.querySelector('.right-panel-content');
+
+    // Restore sidebar state from localStorage
+    let isCollapsed = localStorage.getItem('rightSidebarCollapsed') === 'true';
+
+    // Apply initial state
+    if (isCollapsed) {
+      sidebar.classList.remove('w-12');
+      sidebar.classList.add('w-0', 'border-l-0');
+      icon.classList.remove('fa-chevron-right');
+      icon.classList.add('fa-chevron-left');
+      if (content) content.classList.add('hidden');
+    }
+
+    function toggleRightSidebar() {
+      isCollapsed = !isCollapsed;
+
+      // Save state to localStorage
+      localStorage.setItem('rightSidebarCollapsed', isCollapsed);
+
+      if (isCollapsed) {
+        // Collapse - hide sidebar
+        sidebar.classList.remove('w-12');
+        sidebar.classList.add('w-0', 'border-l-0');
+        icon.classList.remove('fa-chevron-right');
+        icon.classList.add('fa-chevron-left');
+        if (content) content.classList.add('hidden');
+      } else {
+        // Expand - show sidebar
+        sidebar.classList.remove('w-0', 'border-l-0');
+        sidebar.classList.add('w-12');
+        icon.classList.remove('fa-chevron-left');
+        icon.classList.add('fa-chevron-right');
+        if (content) content.classList.remove('hidden');
+      }
+    }
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', toggleRightSidebar);
+    }
+  })();
+</script>

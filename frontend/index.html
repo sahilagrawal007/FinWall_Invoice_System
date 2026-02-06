@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>FinWall Technologies</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              sidebar: "#1e2039",
+              activeBlue: "#2d7ff9",
+              lightBg: "#f8f9fc",
+              mutedText: "#6b7280",
+              borderColor: "#e5e7eb",
+            },
+            fontFamily: {
+              sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- <script>
+      $(document).ready(function () {
+        $("#sidebar-container").load("components/sidebar.html", function () {
+          console.log("Sidebar loaded!");
+        });
+
+        $("#header-container").load("components/header.html");
+        $("#right-panel-container").load("components/right-panel.html");
+
+        $("#main-content").load("pages/home.html");
+
+        $(document).on("click", ".nav-link", function (e) {
+          // A. Stop the browser from following the link normally
+          e.preventDefault();
+
+          // B. Get the target file path from the href attribute
+          let pageUrl = $(this).attr("href");
+
+          $("#main-content").load(pageUrl);
+
+          // D. Update the "Active" Blue Styling
+          // Remove blue style from ALL links
+          $(".nav-link")
+            .removeClass("bg-activeBlue text-white")
+            .addClass("hover:text-white hover:bg-gray-800");
+
+          // Add blue style to THIS clicked link
+          $(this)
+            .removeClass("text-gray-400 hover:text-white hover:bg-gray-800")
+            .addClass("bg-activeBlue text-white");
+        });
+      });
+    </script> -->
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/auth.js"></script>
+
+    <script>
+      // CHECK AUTHENTICATION FIRST
+      Auth.requireAuth();
+
+      $(document).ready(function () {
+        // Display user info
+        const user = Auth.getUser();
+        const org = Auth.getOrganization();
+
+        console.log("[Dashboard] Logged in as:", user);
+        console.log("[Dashboard] Organization:", org);
+
+        // Load components
+        $("#sidebar-container").load("components/sidebar.html", function () {
+          console.log("Sidebar loaded!");
+        });
+
+        $("#header-container").load("components/header.html", function () {
+          // Update header with user info after it loads
+          setTimeout(() => {
+            if (user) {
+              $(".user-name").text(user.full_name || user.email);
+              $(".user-email").text(user.email || "");
+              $(".user-id-info").text("User ID: " + (user.id || "--"));
+            }
+            if (org) {
+              $(".org-name").text(org.name);
+              $(".org-name-short").text(org.name ? org.name.charAt(0).toUpperCase() : "O");
+              $(".org-id-info").text("Organization ID: " + (org.id || "--"));
+            }
+          }, 100);
+        });
+
+        $("#right-panel-container").load("components/right-panel.html");
+
+        // Load home page by default
+        $("#main-content").load("pages/home.html");
+
+        // Handle navigation
+        $(document).on("click", ".nav-link", function (e) {
+          e.preventDefault();
+
+          let pageUrl = $(this).attr("href");
+          $("#main-content").load(pageUrl);
+
+          // Update active styling - find matching sidebar link by page name
+          let pageFileName = pageUrl.split("/").pop(); // e.g., "invoices.html"
+
+          // Remove active style from all nav-links
+          $(".nav-link")
+            .removeClass("bg-activeBlue text-white")
+            .addClass("text-gray-400 hover:text-white hover:bg-gray-800");
+
+          // Find sidebar link that matches this page and highlight it
+          $(".nav-link").each(function () {
+            let sidebarUrl = $(this).attr("href");
+            let sidebarPageFileName = sidebarUrl.split("/").pop();
+
+            if (sidebarPageFileName === pageFileName) {
+              $(this)
+                .removeClass("text-gray-400 hover:text-white hover:bg-gray-800")
+                .addClass("bg-activeBlue text-white");
+            }
+          });
+        });
+
+        // Handle logout
+        $(document).on("click", "#logout-btn", function (e) {
+          e.preventDefault();
+          Auth.logout();
+        });
+      });
+    </script>
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Scrollbar styles moved here */
+      .sidebar-scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .sidebar-scroll::-webkit-scrollbar-track {
+        background: #1e2039;
+      }
+
+      .sidebar-scroll::-webkit-scrollbar-thumb {
+        background: #374151;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+
+  <body class="bg-white h-screen flex overflow-hidden text-gray-800">
+    <div id="sidebar-container" class="h-full flex-shrink-0"></div>
+
+    <div class="flex-1 flex flex-col h-screen overflow-hidden bg-white">
+      <div id="header-container" class="shrink-0 z-10"></div>
+
+      <main class="flex-1 overflow-y-auto p-8 relative">
+        <div id="right-panel-container"></div>
+        <div id="main-content"></div>
+      </main>
+    </div>
+  </body>
+</html>

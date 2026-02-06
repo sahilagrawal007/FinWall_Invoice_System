@@ -1,0 +1,428 @@
+<!-- Reports & Analytics Page with Chart.js -->
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-semibold text-gray-800">Reports & Analytics</h1>
+    <div class="flex items-center space-x-3">
+      <select
+        id="date-range"
+        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="last7days">Last 7 Days</option>
+        <option value="last30days" selected>Last 30 Days</option>
+        <option value="thisMonth">This Month</option>
+        <option value="lastMonth">Last Month</option>
+        <option value="thisYear">This Year</option>
+      </select>
+      <button
+        id="refresh-btn"
+        class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+      >
+        <i class="fas fa-sync-alt"></i> Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Dashboard Summary Cards -->
+  <div id="dashboard-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Cards will be loaded here -->
+  </div>
+
+  <!-- Charts Row 1 -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <!-- Sales Summary Chart -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Sales Overview</h2>
+      <div id="sales-summary" class="text-center py-8">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+      </div>
+    </div>
+
+    <!-- AR Aging Chart -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Accounts Receivable Aging</h2>
+      <canvas id="ar-aging-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- Charts Row 2 -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <!-- Expense Summary Chart -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Expenses by Category</h2>
+      <canvas id="expense-chart"></canvas>
+    </div>
+
+    <!-- Payment Summary Chart -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Payments by Method</h2>
+      <canvas id="payment-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- Customer Balance Table -->
+  <div class="bg-white rounded-lg shadow-sm p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Customer Outstanding Balances</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Total Invoiced</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Total Paid</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Outstanding</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Invoices</th>
+          </tr>
+        </thead>
+        <tbody id="customer-balance-tbody" class="bg-white divide-y divide-gray-200">
+          <!-- Data will be loaded here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Load Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+  // Reports Page JavaScript
+  (function () {
+    let charts = {};
+
+    // Load reports on page load
+    loadAllReports();
+
+    // Event Listeners
+    $("#date-range").on("change", loadAllReports);
+    $("#refresh-btn").on("click", loadAllReports);
+
+    // Load all reports
+    async function loadAllReports() {
+      const dateRange = Utils.getDateRange($("#date-range").val());
+      
+      // Load in parallel
+      await Promise.all([
+        loadDashboardSummary(),
+        loadSalesSummary(dateRange.start, dateRange.end),
+        loadARAgingReport(),
+        loadExpenseSummary(dateRange.start, dateRange.end),
+        loadPaymentSummary(dateRange.start, dateRange.end),
+        loadCustomerBalance(),
+      ]);
+    }
+
+    // Load dashboard summary
+    async function loadDashboardSummary() {
+      try {
+        const data = await API.getDashboardSummary();
+        
+        const cardsHtml = `
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-500 mb-1">Total Sales</p>
+                <p class="text-2xl font-bold text-gray-900">${Utils.formatCurrency(data.total_sales)}</p>
+              </div>
+              <div class="bg-blue-100 p-3 rounded-lg">
+                <i class="fas fa-dollar-sign text-blue-600 text-xl"></i>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">${data.total_invoices} invoices</p>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-500 mb-1">Outstanding</p>
+                <p class="text-2xl font-bold text-gray-900">${Utils.formatCurrency(data.total_outstanding)}</p>
+              </div>
+              <div class="bg-yellow-100 p-3 rounded-lg">
+                <i class="fas fa-clock text-yellow-600 text-xl"></i>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">${data.overdue_invoices} overdue</p>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-500 mb-1">Customers</p>
+                <p class="text-2xl font-bold text-gray-900">${Utils.formatNumber(data.total_customers)}</p>
+              </div>
+              <div class="bg-green-100 p-3 rounded-lg">
+                <i class="fas fa-users text-green-600 text-xl"></i>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">${data.total_quotes} quotes</p>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-500 mb-1">Expenses</p>
+                <p class="text-2xl font-bold text-gray-900">${Utils.formatCurrency(data.total_expenses)}</p>
+              </div>
+              <div class="bg-red-100 p-3 rounded-lg">
+                <i class="fas fa-receipt text-red-600 text-xl"></i>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">This period</p>
+          </div>
+        `;
+
+        $("#dashboard-cards").html(cardsHtml);
+      } catch (error) {
+        console.error("Error loading dashboard:", error);
+      }
+    }
+
+    // Load sales summary
+    async function loadSalesSummary(startDate, endDate) {
+      try {
+        const data = await API.getSalesSummary(startDate, endDate);
+        
+        const summaryHtml = `
+          <div class="grid grid-cols-2 gap-4 text-left">
+            <div>
+              <p class="text-sm text-gray-500">Total Sales</p>
+              <p class="text-xl font-bold text-gray-900">${Utils.formatCurrency(data.total_sales)}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Total Tax</p>
+              <p class="text-xl font-bold text-gray-900">${Utils.formatCurrency(data.total_tax)}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Paid Amount</p>
+              <p class="text-xl font-bold text-green-600">${Utils.formatCurrency(data.paid_amount)}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Outstanding</p>
+              <p class="text-xl font-bold text-yellow-600">${Utils.formatCurrency(data.outstanding_amount)}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Invoice Count</p>
+              <p class="text-xl font-bold text-gray-900">${data.total_invoices}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Average Value</p>
+              <p class="text-xl font-bold text-gray-900">${Utils.formatCurrency(data.average_invoice_value)}</p>
+            </div>
+          </div>
+        `;
+
+        $("#sales-summary").html(summaryHtml);
+      } catch (error) {
+        console.error("Error loading sales summary:", error);
+        $("#sales-summary").html(`<p class="text-red-500 text-sm">Failed to load data</p>`);
+      }
+    }
+
+    // Load AR Aging Report
+    async function loadARAgingReport() {
+      try {
+        const data = await API.getARAgingReport();
+        
+        const labels = data.buckets.map(b => b.age_range);
+        const amounts = data.buckets.map(b => parseFloat(b.total_amount));
+        
+        if (charts.arAging) {
+          charts.arAging.destroy();
+        }
+
+        const ctx = document.getElementById("ar-aging-chart").getContext("2d");
+        charts.arAging = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Overdue Amount",
+              data: amounts,
+              backgroundColor: ["#3b82f6", "#f59e0b", "#ef4444", "#dc2626"],
+            }],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return Utils.formatCurrency(context.parsed.y);
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: function(value) {
+                    return '$' + value.toLocaleString();
+                  }
+                }
+              }
+            }
+          },
+        });
+      } catch (error) {
+        console.error("Error loading AR aging:", error);
+      }
+    }
+
+    // Load expense summary
+    async function loadExpenseSummary(startDate, endDate) {
+      try {
+        const data = await API.getExpenseSummary(startDate, endDate);
+        
+        if (data.categories.length === 0) {
+          document.getElementById("expense-chart").parentElement.innerHTML += 
+            '<p class="text-gray-500 text-sm text-center mt-4">No expense data available</p>';
+          return;
+        }
+
+        const labels = data.categories.map(c => c.category);
+        const amounts = data.categories.map(c => parseFloat(c.total_amount));
+        
+        if (charts.expense) {
+          charts.expense.destroy();
+        }
+
+        const ctx = document.getElementById("expense-chart").getContext("2d");
+        charts.expense = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: labels,
+            datasets: [{
+              data: amounts,
+              backgroundColor: [
+                "#3b82f6", "#10b981", "#f59e0b", "#ef4444", 
+                "#8b5cf6", "#ec4899", "#14b8a6", "#f97316"
+              ],
+            }],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: "bottom" },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = Utils.formatCurrency(context.parsed);
+                    return label + ': ' + value;
+                  }
+                }
+              }
+            },
+          },
+        });
+      } catch (error) {
+        console.error("Error loading expenses:", error);
+      }
+    }
+
+    // Load payment summary
+    async function loadPaymentSummary(startDate, endDate) {
+      try {
+        const data = await API.getPaymentSummary(startDate, endDate);
+        
+        if (data.payment_methods.length === 0) {
+          document.getElementById("payment-chart").parentElement.innerHTML += 
+            '<p class="text-gray-500 text-sm text-center mt-4">No payment data available</p>';
+          return;
+        }
+
+        const labels = data.payment_methods.map(p => p.payment_method);
+        const amounts = data.payment_methods.map(p => parseFloat(p.total_amount));
+        
+        if (charts.payment) {
+          charts.payment.destroy();
+        }
+
+        const ctx = document.getElementById("payment-chart").getContext("2d");
+        charts.payment = new Chart(ctx, {
+          type: "pie",
+          data: {
+            labels: labels,
+            datasets: [{
+              data: amounts,
+              backgroundColor: ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"],
+            }],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: "bottom" },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = Utils.formatCurrency(context.parsed);
+                    return label + ': ' + value;
+                  }
+                }
+              }
+            },
+          },
+        });
+      } catch (error) {
+        console.error("Error loading payments:", error);
+      }
+    }
+
+    // Load customer balance
+    async function loadCustomerBalance() {
+      try {
+        const data = await API.getCustomerBalanceReport();
+        
+        if (data.customers.length === 0) {
+          $("#customer-balance-tbody").html(`
+            <tr>
+              <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+                No customer balance data available
+              </td>
+            </tr>
+          `);
+          return;
+        }
+
+        const html = data.customers
+          .slice(0, 10) // Show top 10
+          .map(c => `
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                ${Utils.sanitizeHTML(c.customer_name)}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+                ${Utils.formatCurrency(c.total_invoiced)}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+                ${Utils.formatCurrency(c.total_paid)}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right ${
+                parseFloat(c.outstanding_balance) > 0 ? 'text-yellow-600' : 'text-green-600'
+              }">
+                ${Utils.formatCurrency(c.outstanding_balance)}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+                ${c.invoice_count}
+              </td>
+            </tr>
+          `)
+          .join("");
+
+        $("#customer-balance-tbody").html(html);
+      } catch (error) {
+        console.error("Error loading customer balance:", error);
+        $("#customer-balance-tbody").html(`
+          <tr>
+            <td colspan="5" class="px-6 py-8 text-center text-red-500">
+              Failed to load customer data
+            </td>
+          </tr>
+        `);
+      }
+    }
+  })();
+</script>
