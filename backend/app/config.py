@@ -1,5 +1,12 @@
+"""
+Application Configuration
+
+Loads settings from environment variables and .env file.
+"""
+
 from pydantic_settings import BaseSettings
 from typing import List
+
 
 class Settings(BaseSettings):
     """Application settings"""
@@ -8,7 +15,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "FinWall Technologies Invoicing Platform"
     DEBUG: bool = True
 
-    # Database
+    # Database - MySQL
     DATABASE_URL: str
 
     # Security
@@ -25,6 +32,10 @@ class Settings(BaseSettings):
     TIMEZONE: str = "Asia/Kolkata"
     FISCAL_YEAR_END_MONTH: int = 3
 
+    # Logging
+    LOG_LEVEL: str = "INFO"
+    LOG_DIR: str = "logs"
+
     class Config:
         env_file = ".env"
         case_sensitive = True
@@ -32,5 +43,6 @@ class Settings(BaseSettings):
     def get_allowed_origins(self) -> List[str]:
         """Convert comma-separated origins to list"""
         return [origin.strip() for origin in self.ALLOWED_ORIGINS.split(",")]
+
 
 settings = Settings()

@@ -1,5 +1,4 @@
 from pydantic import BaseModel, EmailStr
-from uuid import UUID
 from datetime import datetime
 from typing import Optional
 
@@ -20,7 +19,7 @@ class OrganizationBase(BaseModel):
 class OrganizationResponse(OrganizationBase):
     """Schema for organization response"""
 
-    id: UUID
+    id: str
     is_active: bool
     created_at: datetime
 
@@ -31,7 +30,7 @@ class OrganizationResponse(OrganizationBase):
 class OrganizationUserResponse(BaseModel):
     """Schema for organization membership response"""
 
-    id: UUID
+    id: str
     name: str
     role: str
 

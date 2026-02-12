@@ -1,5 +1,4 @@
 from pydantic import BaseModel, EmailStr, Field
-from uuid import UUID
 from datetime import datetime
 from typing import Optional
 from decimal import Decimal
@@ -79,8 +78,8 @@ class CustomerUpdate(BaseModel):
 class CustomerResponse(CustomerBase):
     """Schema for customer response"""
 
-    id: UUID
-    organization_id: UUID
+    id: str
+    organization_id: str
     billing_address: str
     shipping_address: str
     created_at: datetime
@@ -93,7 +92,7 @@ class CustomerResponse(CustomerBase):
 class CustomerListResponse(BaseModel):
     """Minimal schema for customer list"""
 
-    id: UUID
+    id: str
     name: str
     email: Optional[str]
     phone: Optional[str]

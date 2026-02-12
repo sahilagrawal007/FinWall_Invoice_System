@@ -1,3 +1,9 @@
+"""
+Invoice Model
+
+Represents billing documents sent to customers.
+"""
+
 from sqlalchemy import (
     Column,
     String,
@@ -9,9 +15,7 @@ from sqlalchemy import (
     DateTime,
     Text,
 )
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
 from app.database import Base
 from app.models.base import UUIDMixin, TimestampMixin, SoftDeleteMixin
 
@@ -23,19 +27,19 @@ class Invoice(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
 
     # Foreign Keys
     organization_id = Column(
-        UUID(as_uuid=True),
+        String(36),
         ForeignKey("organizations.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     customer_id = Column(
-        UUID(as_uuid=True),
+        String(36),
         ForeignKey("customers.id", ondelete="RESTRICT"),
         nullable=False,
         index=True,
     )
     created_by = Column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+        String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
 
     # Invoice Information
@@ -90,16 +94,16 @@ class InvoiceItem(Base, TimestampMixin):
 
     # Foreign Keys
     invoice_id = Column(
-        UUID(as_uuid=True),
+        String(36),
         ForeignKey("invoices.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     item_id = Column(
-        UUID(as_uuid=True), ForeignKey("items.id", ondelete="SET NULL"), nullable=True
+        String(36), ForeignKey("items.id", ondelete="SET NULL"), nullable=True
     )  # Reference to catalog
     tax_id = Column(
-        UUID(as_uuid=True), ForeignKey("taxes.id", ondelete="SET NULL"), nullable=True
+        String(36), ForeignKey("taxes.id", ondelete="SET NULL"), nullable=True
     )
 
     # Line Item Data (Snapshot at time of invoice)

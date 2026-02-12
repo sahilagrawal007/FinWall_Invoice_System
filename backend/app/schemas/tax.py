@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from uuid import UUID
 from datetime import datetime
 from typing import Optional
 from decimal import Decimal
@@ -36,8 +35,8 @@ class TaxUpdate(BaseModel):
 class TaxResponse(TaxBase):
     """Schema for tax response"""
 
-    id: UUID
-    organization_id: UUID
+    id: str
+    organization_id: str
     created_at: datetime
     updated_at: datetime
 
@@ -48,7 +47,7 @@ class TaxResponse(TaxBase):
 class TaxListResponse(BaseModel):
     """Minimal schema for tax list"""
 
-    id: UUID
+    id: str
     name: str
     rate: Decimal
     tax_type: str

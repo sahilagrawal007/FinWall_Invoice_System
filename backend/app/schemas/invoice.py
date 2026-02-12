@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from uuid import UUID
 from datetime import date, datetime
 from typing import Optional, List
 from decimal import Decimal
@@ -10,11 +9,11 @@ from app.schemas.customer import CustomerListResponse
 class InvoiceItemBase(BaseModel):
     """Base invoice item schema"""
 
-    item_id: Optional[UUID] = None
+    item_id: Optional[str] = None
     description: str = Field(..., min_length=1)
     quantity: Decimal = Field(..., gt=0)
     rate: Decimal = Field(..., ge=0)
-    tax_id: Optional[UUID] = None
+    tax_id: Optional[str] = None
 
 
 class InvoiceItemCreate(InvoiceItemBase):
@@ -27,12 +26,12 @@ class InvoiceItemResponse(BaseModel):
     """Schema for invoice item response"""
 
     id: int
-    item_id: Optional[UUID]
+    item_id: Optional[str]
     description: str
     quantity: Decimal
     rate: Decimal
     amount: Decimal
-    tax_id: Optional[UUID]
+    tax_id: Optional[str]
     tax_rate: Decimal
     tax_amount: Decimal
     total: Decimal
@@ -46,7 +45,7 @@ class InvoiceItemResponse(BaseModel):
 class InvoiceBase(BaseModel):
     """Base invoice schema"""
 
-    customer_id: UUID
+    customer_id: str
     invoice_date: date
     due_date: date
     notes: Optional[str] = None
@@ -63,7 +62,7 @@ class InvoiceCreate(InvoiceBase):
 class InvoiceUpdate(BaseModel):
     """Schema for updating invoice (only DRAFT invoices)"""
 
-    customer_id: Optional[UUID] = None
+    customer_id: Optional[str] = None
     invoice_date: Optional[date] = None
     due_date: Optional[date] = None
     notes: Optional[str] = None
@@ -75,9 +74,9 @@ class InvoiceUpdate(BaseModel):
 class InvoiceResponse(BaseModel):
     """Schema for invoice response"""
 
-    id: UUID
-    organization_id: UUID
-    customer_id: UUID
+    id: str
+    organization_id: str
+    customer_id: str
     customer: Optional[CustomerListResponse] = None
     invoice_number: str
     status: str
@@ -109,9 +108,9 @@ class InvoiceResponse(BaseModel):
 class InvoiceListResponse(BaseModel):
     """Minimal schema for invoice list"""
 
-    id: UUID
+    id: str
     invoice_number: str
-    customer_id: UUID
+    customer_id: str
     customer: Optional[CustomerListResponse] = None
     status: str
     invoice_date: date

@@ -1,5 +1,4 @@
 from pydantic import BaseModel, EmailStr, Field
-from uuid import UUID
 from datetime import datetime
 # from typing import Optional
 
@@ -21,7 +20,7 @@ class UserCreate(UserBase):
 class UserResponse(UserBase):
     """Schema for user response"""
 
-    id: UUID
+    id: str
     full_name: str
     is_active: bool
     created_at: datetime

@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from uuid import UUID
 from datetime import date, datetime
 from typing import Optional, List
 from decimal import Decimal
@@ -10,11 +9,11 @@ from app.schemas.customer import CustomerListResponse
 class QuoteItemBase(BaseModel):
     """Base quote item schema"""
 
-    item_id: Optional[UUID] = None
+    item_id: Optional[str] = None
     description: str = Field(..., min_length=1)
     quantity: Decimal = Field(..., gt=0)
     rate: Decimal = Field(..., ge=0)
-    tax_id: Optional[UUID] = None
+    tax_id: Optional[str] = None
 
 
 class QuoteItemCreate(QuoteItemBase):
@@ -27,12 +26,12 @@ class QuoteItemResponse(BaseModel):
     """Schema for quote item response"""
 
     id: int
-    item_id: Optional[UUID]
+    item_id: Optional[str]
     description: str
     quantity: Decimal
     rate: Decimal
     amount: Decimal
-    tax_id: Optional[UUID]
+    tax_id: Optional[str]
     tax_rate: Decimal
     tax_amount: Decimal
     total: Decimal
@@ -46,7 +45,7 @@ class QuoteItemResponse(BaseModel):
 class QuoteBase(BaseModel):
     """Base quote schema"""
 
-    customer_id: UUID
+    customer_id: str
     quote_date: date
     expiry_date: date
     notes: Optional[str] = None
@@ -62,7 +61,7 @@ class QuoteCreate(QuoteBase):
 class QuoteUpdate(BaseModel):
     """Schema for updating quote (only DRAFT quotes)"""
 
-    customer_id: Optional[UUID] = None
+    customer_id: Optional[str] = None
     quote_date: Optional[date] = None
     expiry_date: Optional[date] = None
     notes: Optional[str] = None
@@ -73,9 +72,9 @@ class QuoteUpdate(BaseModel):
 class QuoteResponse(BaseModel):
     """Schema for quote response"""
 
-    id: UUID
-    organization_id: UUID
-    customer_id: UUID
+    id: str
+    organization_id: str
+    customer_id: str
     customer: Optional[CustomerListResponse] = None
     quote_number: str
     status: str
@@ -93,7 +92,7 @@ class QuoteResponse(BaseModel):
     accepted_at: Optional[datetime]
     rejected_at: Optional[datetime]
     converted_at: Optional[datetime]
-    converted_invoice_id: Optional[UUID]
+    converted_invoice_id: Optional[str]
     created_at: datetime
     updated_at: datetime
 
@@ -104,9 +103,9 @@ class QuoteResponse(BaseModel):
 class QuoteListResponse(BaseModel):
     """Minimal schema for quote list"""
 
-    id: UUID
+    id: str
     quote_number: str
-    customer_id: UUID
+    customer_id: str
     customer: Optional[CustomerListResponse] = None
     status: str
     quote_date: date

@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from uuid import UUID
 from datetime import date, datetime
 from typing import Optional
 from decimal import Decimal
@@ -20,7 +19,7 @@ class ExpenseBase(BaseModel):
     description: Optional[str] = None
     receipt_url: Optional[str] = Field(None, max_length=500)
     is_billable: bool = False
-    customer_id: Optional[UUID] = None
+    customer_id: Optional[str] = None
 
 
 class ExpenseCreate(ExpenseBase):
@@ -44,14 +43,14 @@ class ExpenseUpdate(BaseModel):
     description: Optional[str] = None
     receipt_url: Optional[str] = Field(None, max_length=500)
     is_billable: Optional[bool] = None
-    customer_id: Optional[UUID] = None
+    customer_id: Optional[str] = None
 
 
 class ExpenseResponse(ExpenseBase):
     """Schema for expense response"""
 
-    id: UUID
-    organization_id: UUID
+    id: str
+    organization_id: str
     expense_number: str
     total: Decimal
     created_at: datetime
@@ -64,7 +63,7 @@ class ExpenseResponse(ExpenseBase):
 class ExpenseListResponse(BaseModel):
     """Minimal schema for expense list"""
 
-    id: UUID
+    id: str
     expense_number: str
     vendor_name: str
     expense_date: date

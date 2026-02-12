@@ -1,3 +1,9 @@
+"""
+Payment Model
+
+Represents payments received from customers.
+"""
+
 from sqlalchemy import (
     Column,
     String,
@@ -8,7 +14,6 @@ from sqlalchemy import (
     DateTime,
     Text,
 )
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from app.database import Base
 from app.models.base import UUIDMixin, TimestampMixin
@@ -21,25 +26,25 @@ class Payment(Base, UUIDMixin, TimestampMixin):
 
     # Foreign Keys
     organization_id = Column(
-        UUID(as_uuid=True),
+        String(36),
         ForeignKey("organizations.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     customer_id = Column(
-        UUID(as_uuid=True),
+        String(36),
         ForeignKey("customers.id", ondelete="RESTRICT"),
         nullable=False,
         index=True,
     )
     invoice_id = Column(
-        UUID(as_uuid=True),
+        String(36),
         ForeignKey("invoices.id", ondelete="RESTRICT"),
         nullable=True,
         index=True,
     )
     created_by = Column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+        String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
 
     # Payment Information
@@ -69,7 +74,7 @@ class Payment(Base, UUIDMixin, TimestampMixin):
     voided_at = Column(DateTime(timezone=True), nullable=True)
     void_reason = Column(Text, nullable=True)
     voided_by = Column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+        String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
 
     # Relationships

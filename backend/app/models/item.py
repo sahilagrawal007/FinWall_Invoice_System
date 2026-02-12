@@ -1,5 +1,10 @@
+"""
+Item Model
+
+Represents products or services that can be invoiced.
+"""
+
 from sqlalchemy import Column, String, Boolean, ForeignKey, Numeric, Text
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from app.database import Base
 from app.models.base import UUIDMixin, TimestampMixin, SoftDeleteMixin
@@ -12,13 +17,13 @@ class Item(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
 
     # Foreign Keys
     organization_id = Column(
-        UUID(as_uuid=True),
+        String(36),
         ForeignKey("organizations.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     tax_id = Column(
-        UUID(as_uuid=True), ForeignKey("taxes.id", ondelete="SET NULL"), nullable=True
+        String(36), ForeignKey("taxes.id", ondelete="SET NULL"), nullable=True
     )  # Default tax
 
     # Item Information

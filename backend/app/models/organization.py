@@ -1,5 +1,10 @@
+"""
+Organization Model
+
+Represents a business entity with users and associated data.
+"""
+
 from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
@@ -26,11 +31,11 @@ class Organization(Base, UUIDMixin, TimestampMixin):
     country = Column(String(100), default="India")
 
     # Tax and Financial
-    tax_id = Column(String(50), nullable=True, comment="GST Number")
+    tax_id = Column(String(50), nullable=True)  # GST Number
     currency_code = Column(String(3), default="INR", nullable=False)
     fiscal_year_end_month = Column(
-        Integer, default=3, nullable=False, comment="March = 3 (Indian FY)"
-    )
+        Integer, default=3, nullable=False
+    )  # March = 3 (Indian FY)
 
     logo_url = Column(String(500), nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
@@ -39,7 +44,7 @@ class Organization(Base, UUIDMixin, TimestampMixin):
     memberships = relationship(
         "OrganizationUser",
         back_populates="organization",
-        foreign_keys="[OrganizationUser.organization_id]",  # FIXED: Explicit foreign key
+        foreign_keys="[OrganizationUser.organization_id]",
         cascade="all, delete-orphan",
     )
 
@@ -55,40 +60,40 @@ class OrganizationUser(Base, TimestampMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
 
     organization_id = Column(
-        UUID(as_uuid=True),
+        String(36),
         ForeignKey("organizations.id", ondelete="CASCADE"),
         nullable=False,
     )
     user_id = Column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
 
     role = Column(String(20), nullable=False, default="VIEWER")
     is_active = Column(Boolean, default=True, nullable=False)
 
     invited_by = Column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+        String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
     joined_at = Column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
 
-    # Relationships - FIXED: Explicit foreign_keys for both
+    # Relationships
     organization = relationship(
         "Organization",
         back_populates="memberships",
-        foreign_keys=[organization_id],  # FIXED
+        foreign_keys=[organization_id],
     )
 
     user = relationship(
         "User",
         back_populates="organization_memberships",
-        foreign_keys=[user_id],  # FIXED: Use user_id, not invited_by
+        foreign_keys=[user_id],
     )
 
     inviter = relationship(
         "User",
-        foreign_keys=[invited_by],  # FIXED: Separate relationship for inviter
+        foreign_keys=[invited_by],
     )
 
     def __repr__(self):

@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from uuid import UUID
 from datetime import date, datetime
 from typing import Optional
 from decimal import Decimal
@@ -8,7 +7,7 @@ from decimal import Decimal
 class PaymentBase(BaseModel):
     """Base payment schema"""
 
-    invoice_id: UUID
+    invoice_id: str
     payment_date: date
     amount: Decimal = Field(..., gt=0)
     payment_method: str = Field(
@@ -27,7 +26,7 @@ class PaymentCreate(PaymentBase):
 class PaymentGatewayCreate(BaseModel):
     """Schema for creating payment via gateway (future use)"""
 
-    invoice_id: UUID
+    invoice_id: str
     amount: Decimal = Field(..., gt=0)
     gateway_name: str  # razorpay, stripe
     gateway_payment_id: str
@@ -38,10 +37,10 @@ class PaymentGatewayCreate(BaseModel):
 class PaymentResponse(BaseModel):
     """Schema for payment response"""
 
-    id: UUID
-    organization_id: UUID
-    customer_id: UUID
-    invoice_id: Optional[UUID]
+    id: str
+    organization_id: str
+    customer_id: str
+    invoice_id: Optional[str]
     payment_number: str
     payment_date: date
     amount: Decimal
@@ -66,7 +65,7 @@ class PaymentResponse(BaseModel):
 class PaymentListResponse(BaseModel):
     """Minimal schema for payment list"""
 
-    id: UUID
+    id: str
     payment_number: str
     payment_date: date
     amount: Decimal

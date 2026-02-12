@@ -1,0 +1,11 @@
+{
+    "liveServer.settings.port": 5501,
+    "liveServer.settings.ignoreFiles": [
+        "backend/**",
+        "**/node_modules/**",
+        "**/__pycache__/**",
+        "**/logs/**",
+        "**/*.pyc",
+        "**/*.log"
+    ]
+}

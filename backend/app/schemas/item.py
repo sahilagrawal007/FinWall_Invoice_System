@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from uuid import UUID
 from datetime import datetime
 from typing import Optional
 from decimal import Decimal
@@ -15,7 +14,7 @@ class ItemBase(BaseModel):
     sku: Optional[str] = Field(None, max_length=100)
     unit: str = Field(default="unit", max_length=50)
     rate: Decimal = Field(..., ge=0, description="Selling price")
-    tax_id: Optional[UUID] = None
+    tax_id: Optional[str] = None
     is_active: bool = True
 
 
@@ -34,15 +33,15 @@ class ItemUpdate(BaseModel):
     sku: Optional[str] = Field(None, max_length=100)
     unit: Optional[str] = Field(None, max_length=50)
     rate: Optional[Decimal] = Field(None, ge=0)
-    tax_id: Optional[UUID] = None
+    tax_id: Optional[str] = None
     is_active: Optional[bool] = None
 
 
 class ItemResponse(ItemBase):
     """Schema for item response"""
 
-    id: UUID
-    organization_id: UUID
+    id: str
+    organization_id: str
     tax: Optional[TaxListResponse] = None
     created_at: datetime
     updated_at: datetime
@@ -54,7 +53,7 @@ class ItemResponse(ItemBase):
 class ItemListResponse(BaseModel):
     """Minimal schema for item list"""
 
-    id: UUID
+    id: str
     name: str
     item_type: str
     rate: Decimal

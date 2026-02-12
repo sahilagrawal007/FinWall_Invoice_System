@@ -1,5 +1,10 @@
+"""
+Expense Model
+
+Represents business expenses.
+"""
+
 from sqlalchemy import Column, String, Boolean, ForeignKey, Numeric, Date, Text
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from app.database import Base
 from app.models.base import UUIDMixin, TimestampMixin, SoftDeleteMixin
@@ -12,19 +17,19 @@ class Expense(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
 
     # Foreign Keys
     organization_id = Column(
-        UUID(as_uuid=True),
+        String(36),
         ForeignKey("organizations.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     customer_id = Column(
-        UUID(as_uuid=True),
+        String(36),
         ForeignKey("customers.id", ondelete="SET NULL"),
         nullable=True,
         index=True,
     )  # If billable
     created_by = Column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+        String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
 
     # Expense Information

@@ -1,5 +1,10 @@
+"""
+Customer Model
+
+Represents businesses or individuals that are billed.
+"""
+
 from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, Numeric, Text
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from app.database import Base
 from app.models.base import UUIDMixin, TimestampMixin, SoftDeleteMixin
@@ -12,7 +17,7 @@ class Customer(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
 
     # Foreign Key
     organization_id = Column(
-        UUID(as_uuid=True),
+        String(36),
         ForeignKey("organizations.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -43,7 +48,7 @@ class Customer(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
     shipping_country = Column(String(100), nullable=True)
 
     # Tax and Payment Information
-    tax_id = Column(String(50), nullable=True, comment="GST Number or PAN")
+    tax_id = Column(String(50), nullable=True)  # GST Number or PAN
     currency_code = Column(String(3), default="INR", nullable=False)
     payment_terms_days = Column(Integer, default=30, nullable=False)
 

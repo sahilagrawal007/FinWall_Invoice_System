@@ -147,6 +147,16 @@ class QuoteService:
         """Create a new quote with line items"""
 
         # 1. Validate customer
+        print(f"[DEBUG] quote_data.customer_id = '{quote_data.customer_id}' (type={type(quote_data.customer_id)})")
+        print(f"[DEBUG] organization.id = '{organization.id}' (type={type(organization.id)})")
+        
+        # Debug: check all customers in this org
+        debug_result = await db.execute(
+            select(Customer).where(Customer.organization_id == organization.id)
+        )
+        debug_customers = debug_result.scalars().all()
+        print(f"[DEBUG] Customers in org: {[(c.id, c.name, c.organization_id, c.is_deleted) for c in debug_customers]}")
+        
         result = await db.execute(
             select(Customer).where(
                 and_(
@@ -159,6 +169,17 @@ class QuoteService:
         customer = result.scalar_one_or_none()
 
         if not customer:
+            print(f"[DEBUG] Customer NOT found! Trying without org filter...")
+            result2 = await db.execute(
+                select(Customer).where(Customer.id == quote_data.customer_id)
+            )
+            c2 = result2.scalar_one_or_none()
+            if c2:
+                print(f"[DEBUG] Found customer without org filter: id={c2.id}, org_id={c2.organization_id}, is_deleted={c2.is_deleted}")
+                print(f"[DEBUG] org.id == c.org_id? {organization.id == c2.organization_id}")
+                print(f"[DEBUG] org.id repr: {repr(organization.id)}, c.org_id repr: {repr(c2.organization_id)}")
+            else:
+                print(f"[DEBUG] Customer not found even without org filter!")
             raise NotFoundException("Customer not found")
 
         # 2. Validate dates
